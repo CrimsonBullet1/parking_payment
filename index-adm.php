@@ -1,10 +1,10 @@
 <?php
-   session_start();
+  //  session_start();
 
-   if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit();
-   }
+  //  if (!isset($_SESSION['user'])) {
+  //   header("Location: login.php");
+  //   exit();
+  //  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,39 +46,14 @@
     <div class="brand-logo">
       <a href="index.php">
         <img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
-        <h5 class="logo-text">Dashtreme Admin</h5>
+        <h5 class="logo-text">Dash Carpark</h5>
       </a>
     </div>
     <ul class="sidebar-menu do-nicescrol">
       <li class="sidebar-header">MAIN NAVIGATION</li>
       <li>
-        <a href="index.php">
+        <a href="index-adm.php">
           <i class="zmdi zmdi-view-dashboard"></i> <span>Dashboard</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="forms.php">
-          <i class="zmdi zmdi-format-list-bulleted"></i> <span>Forms</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="calendar.php">
-          <i class="zmdi zmdi-calendar-check"></i> <span>Calendar</span>
-          <small class="badge float-right badge-light">New</small>
-        </a>
-      </li>
-
-      <li>
-        <a href="profile.php">
-          <i class="zmdi zmdi-face"></i> <span>Profile</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="login.php" target="_blank">
-          <i class="zmdi zmdi-lock"></i> <span>Login</span>
         </a>
       </li>
 
@@ -87,11 +62,6 @@
           <i class="zmdi zmdi-account-circle"></i> <span>Staff Registration</span>
         </a>
       </li>
-
-      <li class="sidebar-header">LABELS</li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-coffee text-danger"></i> <span>Important</span></a></li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-chart-donut text-success"></i> <span>Warning</span></a></li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-share text-info"></i> <span>Information</span></a></li>
     </ul>
   </div>
 <!--End sidebar-wrapper-->
@@ -126,7 +96,16 @@
             </a>
           </li>
           <li class="dropdown-divider"></li>
-          <li class="dropdown-item"><i class="icon-power mr-2"></i> Logout</li>
+          <li class="dropdown-item">
+            <a href="profile.php">
+              <i class="fa fa-user"></i> Profile
+            </a>
+          </li>
+          <li class="dropdown-item">
+            <a href="logout.php">  
+              <i class="fa fa-sign-out"></i> Logout
+            </a>
+          </li>
         </ul>
       </li>
     </ul>
