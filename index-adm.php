@@ -305,7 +305,7 @@
 
 <!-- Display data in DB with Chart JS -->
 <?php 
-  $query = "SELECT TO_CHAR(RESERVATION_DATE, 'DD-MM-YYYY') AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY RESERVATION_DATE";
+  $query = "SELECT TO_CHAR(RESERVATION_DATE, 'DD-MM-YYYY') AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY RESERVATION_DATE ORDER BY RESERVATION_DATE";
   $stmt = oci_parse($dbconn, $query);
   oci_define_by_name($stmt, "TOTAL", $sum_cost);
   if(oci_execute($stmt)) {
