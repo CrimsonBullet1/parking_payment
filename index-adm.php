@@ -1,4 +1,5 @@
 <?php
+  include ("conn.php");
   //  session_start();
 
   //  if (!isset($_SESSION['user'])) {
@@ -121,31 +122,30 @@
       <div class="card mt-3">
         <div class="card-content">
           <div class="row row-group m-0">
-            <div class="col-12 col-lg-6 col-xl-4 border-light">
+            <?php 
+              $query = "SELECT COUNT(*) AS TOTAL FROM RESERVATIONS";
+              $stmt = oci_parse($dbconn, $query);
+              oci_define_by_name($stmt, "TOTAL", $total_reserve);
+              oci_execute($stmt);
+            ?>
+            <div class="col-12 col-lg-6 col-xl-6 border-light">
               <div class="card-body">
-                <h5 class="text-white mb-0">9526 <span class="float-right"><i class="fa fa-shopping-cart"></i></span></h5>
-                <div class="progress my-3" style="height:3px;">
-                  <div class="progress-bar" style="width:55%"></div>
-                </div>
-                <p class="mb-0 text-white small-font">Total Orders <span class="float-right">+4.2% <i class="zmdi zmdi-long-arrow-up"></i></span></p>
+                <h5 class="text-white mb-0"><?php while(oci_fetch($stmt)) {echo $total_reserve;} ?> <span class="float-right"><i class="fa fa-car"></i></span></h5>
+                <div class="progress my-3" style="height:3px;"></div>
+                <p class="mb-0 text-white small-font">Total Reservations</p>
               </div>
             </div>
-            <div class="col-12 col-lg-6 col-xl-4 border-light">
+            <?php 
+              $query = "SELECT SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS";
+              $stmt = oci_parse($dbconn, $query);
+              oci_define_by_name($stmt, "TOTAL", $total_revenue);
+              oci_execute($stmt);
+            ?>
+            <div class="col-12 col-lg-6 col-xl-6 border-light">
               <div class="card-body">
-                <h5 class="text-white mb-0">8323 <span class="float-right"><i class="fa fa-usd"></i></span></h5>
-                <div class="progress my-3" style="height:3px;">
-                  <div class="progress-bar" style="width:55%"></div>
-                </div>
-                <p class="mb-0 text-white small-font">Total Revenue <span class="float-right">+1.2% <i class="zmdi zmdi-long-arrow-up"></i></span></p>
-              </div>
-            </div>
-            <div class="col-12 col-lg-6 col-xl-4 border-light">
-              <div class="card-body">
-                <h5 class="text-white mb-0">6200 <span class="float-right"><i class="fa fa-car"></i></span></h5>
-                <div class="progress my-3" style="height:3px;">
-                  <div class="progress-bar" style="width:55%"></div>
-                </div>
-                <p class="mb-0 text-white small-font">Parked Cars <span class="float-right">+5.2% <i class="zmdi zmdi-long-arrow-up"></i></span></p>
+                <h5 class="text-white mb-0">RM <?php while(oci_fetch($stmt)) {echo $total_revenue;} ?> <span class="float-right"><i class="fa fa-usd"></i></span></h5>
+                <div class="progress my-3" style="height:3px;"></div>
+                <p class="mb-0 text-white small-font">Total Revenue</p>
               </div>
             </div>
           </div>
@@ -163,22 +163,16 @@
             </div>
         
             <div class="row m-0 row-group text-center border-top border-light-3">
-              <div class="col-12 col-lg-4">
+              <div class="col-12 col-lg-6">
                 <div class="p-3">
                   <h5 class="mb-0">45.87M</h5>
-                  <small class="mb-0">Lowest Sales <span> <i class="fa fa-arrow-up"></i> 2.43%</span></small>
+                  <small class="mb-0">Lowest Sales</small>
                 </div>
               </div>
-              <div class="col-12 col-lg-4">
+              <div class="col-12 col-lg-6">
                 <div class="p-3">
                   <h5 class="mb-0">15:48</h5>
-                  <small class="mb-0">Highest Sales <span> <i class="fa fa-arrow-up"></i> 12.65%</span></small>
-                </div>
-              </div>
-              <div class="col-12 col-lg-4">
-                <div class="p-3">
-                  <h5 class="mb-0">245.65</h5>
-                  <small class="mb-0">Average Sales per Year <span> <i class="fa fa-arrow-up"></i> 5.62%</span></small>
+                  <small class="mb-0">Highest Sales</small>
                 </div>
               </div>
             </div>
@@ -190,92 +184,49 @@
       <div class="row">
         <div class="col-12 col-lg-12">
           <div class="card">
-            <div class="card-header">Recent Order Tables</div>
+            <div class="card-header">Reservations</div>
             <div class="table-responsive">
+              <?php 
+                $query = "SELECT * FROM RESERVATIONS";
+                $stmt = oci_parse($dbconn, $query);
+                if(oci_execute($stmt)) {
+              ?>
               <table class="table align-items-center table-flush table-borderless">
                 <thead>
                   <tr>
-                    <th>Product</th>
-                    <th>Photo</th>
-                    <th>Product ID</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                    <th>Shipping</th>
+                    <th>ID</th>
+                    <th>Duration</th>
+                    <th>Total</th>
+                    <th>Customer</th>
+                    <th>Staff</th>
+                    <th>Parking Slot</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <?php 
+                    while($rows = oci_fetch_row($stmt)) {
+
+                  ?>
                   <tr>
-                    <td>Iphone 5</td>
-                    <td><img src="https://via.placeholder.com/110x110" class="product-img" alt="product img"></td>
-                    <td>#9405822</td>
-                    <td>$ 1250.00</td>
-                    <td>03 Aug 2017</td>
-                    <td>
-                      <div class="progress shadow" style="height: 3px;">
-                        <div class="progress-bar" role="progressbar" style="width: 90%"></div>
-                      </div>
-                    </td>
+                    <td><?php echo $rows[0]; ?></td>
+                    <td><?php echo $rows[1]; ?></td>
+                    <td><?php echo $rows[2]; ?></td>
+                    <td><?php echo $rows[3]; ?></td>
+                    <td><?php echo $rows[4]; ?></td>
+                    <td><?php echo $rows[5]; ?></td>
                   </tr>
-                  <tr>
-                    <td>Earphone GL</td>
-                    <td><img src="https://via.placeholder.com/110x110" class="product-img" alt="product img"></td>
-                    <td>#9405820</td>
-                    <td>$ 1500.00</td>
-                    <td>03 Aug 2017</td>
-                    <td>
-                      <div class="progress shadow" style="height: 3px;">
-                        <div class="progress-bar" role="progressbar" style="width: 60%"></div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>HD Hand Camera</td>
-                    <td><img src="https://via.placeholder.com/110x110" class="product-img" alt="product img"></td>
-                    <td>#9405830</td>
-                    <td>$ 1400.00</td>
-                    <td>03 Aug 2017</td>
-                    <td>
-                      <div class="progress shadow" style="height: 3px;">
-                        <div class="progress-bar" role="progressbar" style="width: 70%"></div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Clasic Shoes</td>
-                    <td><img src="https://via.placeholder.com/110x110" class="product-img" alt="product img"></td>
-                    <td>#9405825</td>
-                    <td>$ 1200.00</td>
-                    <td>03 Aug 2017</td>
-                    <td>
-                      <div class="progress shadow" style="height: 3px;">
-                        <div class="progress-bar" role="progressbar" style="width: 100%"></div>
-                        </div>
-                      </td>
-                  </tr>
-                  <tr>
-                    <td>Hand Watch</td>
-                    <td><img src="https://via.placeholder.com/110x110" class="product-img" alt="product img"></td>
-                    <td>#9405840</td>
-                    <td>$ 1800.00</td>
-                    <td>03 Aug 2017</td>
-                    <td>
-                      <div class="progress shadow" style="height: 3px;">
-                        <div class="progress-bar" role="progressbar" style="width: 40%"></div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Clasic Shoes</td>
-                    <td><img src="https://via.placeholder.com/110x110" class="product-img" alt="product img"></td>
-                    <td>#9405825</td>
-                    <td>$ 1200.00</td>
-                    <td>03 Aug 2017</td>
-                    <td>
-                      <div class="progress shadow" style="height: 3px;">
-                        <div class="progress-bar" role="progressbar" style="width: 100%"></div>
-                      </div>
-                    </td>
-                  </tr>
+                  <?php 
+                      } 
+                    } 
+                    else {
+                      $e = oci_error($stmt);
+                      print htmlentities($e['message']);
+                      print "\n<pre>\n";
+                      print htmlentities($e['sqltext']);
+                      printf("\n%".($e['offset']+1)."s", "^");
+                      print  "\n</pre>\n";
+                    }
+                  ?>
                 </tbody>
               </table>
             </div>
