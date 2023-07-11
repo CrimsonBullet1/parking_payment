@@ -163,16 +163,40 @@
             </div>
         
             <div class="row m-0 row-group text-center border-top border-light-3">
-              <div class="col-12 col-lg-6">
+              <?php 
+                $query = "SELECT MIN(TOTALCOST) AS MIN FROM RESERVATIONS";
+                $stmt = oci_parse($dbconn, $query);
+                oci_define_by_name($stmt, "MIN", $min_revenue);
+                oci_execute($stmt);
+              ?>
+              <div class="col-12 col-lg-4">
                 <div class="p-3">
-                  <h5 class="mb-0">45.87M</h5>
+                  <h5 class="mb-0">RM <?php while(oci_fetch($stmt)) {echo $min_revenue;} ?></h5>
                   <small class="mb-0">Lowest Sales</small>
                 </div>
               </div>
-              <div class="col-12 col-lg-6">
+              <?php 
+                $query = "SELECT MAX(TOTALCOST) AS MAX FROM RESERVATIONS";
+                $stmt = oci_parse($dbconn, $query);
+                oci_define_by_name($stmt, "MAX", $max_revenue);
+                oci_execute($stmt);
+              ?>
+              <div class="col-12 col-lg-4">
                 <div class="p-3">
-                  <h5 class="mb-0">15:48</h5>
+                  <h5 class="mb-0">RM <?php while(oci_fetch($stmt)) {echo $max_revenue;} ?></h5>
                   <small class="mb-0">Highest Sales</small>
+                </div>
+              </div>
+              <?php 
+                $query = "SELECT AVG(TOTALCOST) AS AVG FROM RESERVATIONS";
+                $stmt = oci_parse($dbconn, $query);
+                oci_define_by_name($stmt, "AVG", $avg_revenue);
+                oci_execute($stmt);
+              ?>
+              <div class="col-12 col-lg-4">
+                <div class="p-3">
+                  <h5 class="mb-0">RM <?php while(oci_fetch($stmt)) {echo $avg_revenue;} ?></h5>
+                  <small class="mb-0">Average Sales</small>
                 </div>
               </div>
             </div>
@@ -187,11 +211,11 @@
             <div class="card-header">Reservations</div>
             <div class="table-responsive">
               <?php 
-                $query = "SELECT * FROM RESERVATIONS";
+                $query = "SELECT RESERVATIONID, DURATION, TOTALCOST, CUSTOMERID, STAFFID, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Month YYYY') AS RESERVEDATE FROM RESERVATIONS";
                 $stmt = oci_parse($dbconn, $query);
                 if(oci_execute($stmt)) {
               ?>
-              <table class="table align-items-center table-flush table-borderless">
+              <table class="table align-items-center table-flush table-borderless" style="text-align: center;">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -200,6 +224,7 @@
                     <th>Customer</th>
                     <th>Staff</th>
                     <th>Parking Slot</th>
+                    <th>Reservation Date</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -209,11 +234,12 @@
                   ?>
                   <tr>
                     <td><?php echo $rows[0]; ?></td>
-                    <td><?php echo $rows[1]; ?></td>
-                    <td><?php echo $rows[2]; ?></td>
+                    <td><?php echo $rows[1]; ?> days</td>
+                    <td>RM <?php echo $rows[2]; ?></td>
                     <td><?php echo $rows[3]; ?></td>
                     <td><?php echo $rows[4]; ?></td>
                     <td><?php echo $rows[5]; ?></td>
+                    <td><?php echo $rows[6]; ?></td>
                   </tr>
                   <?php 
                       } 
