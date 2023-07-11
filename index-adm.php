@@ -155,7 +155,13 @@
       <div class="row">
         <div class="col-12 col-lg-8 col-xl-12">
           <div class="card">
-            <div class="card-header" style="text-align: center;">Sales Projection</div>  
+            <div class="card-header">Sales Projection</div>
+            <div class="card-body">
+              <div class="chart-container-1">
+                <canvas id="chart1"></canvas>
+              </div>
+            </div>
+        
             <div class="row m-0 row-group text-center border-top border-light-3">
               <?php 
                 $query = "SELECT MIN(TOTALCOST) AS MIN FROM RESERVATIONS";
@@ -295,11 +301,88 @@
 <!-- Custom scripts -->
 <script src="assets/js/app-script.js"></script>
 <!-- Chart js -->
-
 <script src="assets/plugins/Chart.js/Chart.min.js"></script>
 
-<!-- Index js -->
-<script src="assets/js/index.js"></script>
+<!-- Display data in DB with Chart JS -->
+<?php 
+  $query = "SELECT TO_CHAR(RESERVATION_DATE, 'DD-MM-YYYY') AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY RESERVATION_DATE";
+  $stmt = oci_parse($dbconn, $query);
+  oci_define_by_name($stmt, "TOTAL", $sum_cost);
+  if(oci_execute($stmt)) {
+    while($row = oci_fetch_array($stmt)) {
+      $data1 = $data1 . '"' . $row['RESERVEDATE'] . '",';
+      $data2 = $data2 . '"' . $row['TOTAL'] . '",';
+    }
+
+    $data1 = trim($data1,",");
+    $data2 = trim($data2,",");
+  }
+  else {
+    $e = oci_error($stmt);
+    print htmlentities($e['message']);
+    print "\n<pre>\n";
+    print htmlentities($e['sqltext']);
+    printf("\n%".($e['offset']+1)."s", "^");
+    print  "\n</pre>\n";
+  }
+?>
+
+<script>
+  "use strict";
+
+  var ctx = document.getElementById('chart1').getContext('2d');
+		
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [<?php echo $data1; ?>],
+        datasets: [{
+          label: 'Sales',
+          data: [<?php echo $data2; ?>],
+          backgroundColor: '#fff',
+          borderColor: "transparent",
+          pointRadius :"0",
+          borderWidth: 3
+        }]
+      },
+    options: {
+      maintainAspectRatio: false,
+      legend: {
+        display: false,
+        labels: {
+        fontColor: '#ddd',  
+        boxWidth:40
+        }
+      },
+      tooltips: {
+        displayColors:false
+      },	
+      scales: {
+        xAxes: [{
+        ticks: {
+          beginAtZero:true,
+          fontColor: '#ddd'
+        },
+        gridLines: {
+          display: true ,
+          color: "rgba(221, 221, 221, 0.08)"
+        },
+        }],
+         yAxes: [{
+        ticks: {
+          beginAtZero:true,
+          fontColor: '#ddd'
+        },
+        gridLines: {
+          display: true ,
+          color: "rgba(221, 221, 221, 0.08)"
+        },
+        }]
+       }
+
+     }
+    });
+</script>
 
 </body>
 </html>
