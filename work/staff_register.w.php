@@ -42,7 +42,7 @@
 	}
 	else{
 		echo "<script>alert('Please try again!');
-		window.location.href = '../login.php';
+		window.location.href = '../staff_register.php';
 		</script>";
 	}
 ?>

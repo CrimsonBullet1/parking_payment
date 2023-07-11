@@ -58,7 +58,7 @@
       </li>
 
       <li>
-        <a href="staff_register.php" target="_blank">
+        <a href="staff_register.php">
           <i class="zmdi zmdi-account-circle"></i> <span>Staff Registration</span>
         </a>
       </li>

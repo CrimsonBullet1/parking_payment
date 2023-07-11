@@ -79,6 +79,10 @@
 			        </div>
 			      </div>
 			      <button type="submit" name="submit" class="btn btn-light btn-block waves-effect waves-light">Sign Up</button>
+						<div class="form-group"></div>
+							<a href="index-adm.php">
+								<button type="button" class="btn btn-light btn-block waves-effect waves-light"> Back</button>
+							</a>
 			    </form>
 					<div class="form-group"></div>
 					<div id="message" class="form-group">
