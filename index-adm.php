@@ -155,13 +155,7 @@
       <div class="row">
         <div class="col-12 col-lg-8 col-xl-12">
           <div class="card">
-            <div class="card-header">Monthly Sales Projection</div>
-            <div class="card-body">
-              <div class="chart-container-1">
-                <canvas id="chart1"></canvas>
-              </div>
-            </div>
-        
+            <div class="card-header" style="text-align: center;">Sales Projection</div>  
             <div class="row m-0 row-group text-center border-top border-light-3">
               <?php 
                 $query = "SELECT MIN(TOTALCOST) AS MIN FROM RESERVATIONS";
