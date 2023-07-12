@@ -211,7 +211,7 @@
             <div class="card-header">Reservations</div>
             <div class="table-responsive">
               <?php 
-                $query = "SELECT RESERVATIONID, DURATION, TOTALCOST, CUSTOMERID, STAFFID, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Month YYYY') AS RESERVEDATE FROM RESERVATIONS";
+                $query = "SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Month YYYY') AS RESERVEDATE FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID)";
                 $stmt = oci_parse($dbconn, $query);
                 if(oci_execute($stmt)) {
               ?>
@@ -221,8 +221,8 @@
                     <th>ID</th>
                     <th>Duration</th>
                     <th>Total</th>
-                    <th>Customer</th>
-                    <th>Staff</th>
+                    <th>Customer Name</th>
+                    <th>Staff Name</th>
                     <th>Parking Slot</th>
                     <th>Reservation Date</th>
                   </tr>
@@ -305,6 +305,9 @@
 
 <!-- Display data in DB with Chart JS -->
 <?php 
+  $data1 = "";
+  $data2 = "";
+  
   $query = "SELECT TO_CHAR(RESERVATION_DATE, 'DD-MM-YYYY') AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY RESERVATION_DATE ORDER BY RESERVATION_DATE";
   $stmt = oci_parse($dbconn, $query);
   oci_define_by_name($stmt, "TOTAL", $sum_cost);
