@@ -59,8 +59,8 @@
       </li>
 
       <li>
-        <a href="staff_register.php">
-          <i class="zmdi zmdi-account-circle"></i> <span>Staff Registration</span>
+        <a href="staff.php">
+          <i class="zmdi zmdi-account-circle"></i> <span>Staff</span>
         </a>
       </li>
     </ul>
@@ -188,7 +188,7 @@
                 </div>
               </div>
               <?php 
-                $query = "SELECT AVG(TOTALCOST) AS AVG FROM RESERVATIONS";
+                $query = "SELECT ROUND(AVG(TOTALCOST)) AS AVG FROM RESERVATIONS";
                 $stmt = oci_parse($dbconn, $query);
                 oci_define_by_name($stmt, "AVG", $avg_revenue);
                 oci_execute($stmt);
@@ -211,19 +211,19 @@
             <div class="card-header">Reservations</div>
             <div class="table-responsive">
               <?php 
-                $query = "SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Month YYYY') AS RESERVEDATE FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID)";
+                $query = "SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID)";
                 $stmt = oci_parse($dbconn, $query);
                 if(oci_execute($stmt)) {
               ?>
-              <table class="table align-items-center table-flush table-borderless" style="text-align: center;">
+              <table class="table table-striped align-items-center table-flush table-borderless" style="text-align: center;">
                 <thead>
                   <tr>
-                    <th>ID</th>
+                    <th>No</th>
                     <th>Duration</th>
                     <th>Total</th>
                     <th>Customer Name</th>
                     <th>Staff Name</th>
-                    <th>Parking Slot</th>
+                    <th>Parking Lot</th>
                     <th>Reservation Date</th>
                   </tr>
                 </thead>
@@ -307,13 +307,50 @@
 <?php 
   $data1 = "";
   $data2 = "";
-  
-  $query = "SELECT TO_CHAR(RESERVATION_DATE, 'DD-MM-YYYY') AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY RESERVATION_DATE ORDER BY RESERVATION_DATE";
+
+  $query = "SELECT EXTRACT(MONTH FROM RESERVATION_DATE) AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY EXTRACT(MONTH FROM RESERVATION_DATE) ORDER BY 1";
   $stmt = oci_parse($dbconn, $query);
   oci_define_by_name($stmt, "TOTAL", $sum_cost);
   if(oci_execute($stmt)) {
     while($row = oci_fetch_array($stmt)) {
-      $data1 = $data1 . '"' . $row['RESERVEDATE'] . '",';
+      switch($row['RESERVEDATE']) {
+        case 1:
+          $data1 = $data1 . '"Jan"' . ',';
+          break;
+        case 2:
+          $data1 = $data1 . '"Feb"' . ',';
+          break;
+        case 3:
+          $data1 = $data1 . '"Mar"' . ',';
+          break;
+        case 4:
+          $data1 = $data1 . '"Apr"' . ',';
+          break;
+        case 5:
+          $data1 = $data1 . '"May"' . ',';
+          break;
+        case 6:
+          $data1 = $data1 . '"Jun"' . ',';
+          break;
+        case 7:
+          $data1 = $data1 . '"Jul"' . ',';
+          break;
+        case 8:
+          $data1 = $data1 . '"Aug"' . ',';
+          break;
+        case 9:
+          $data1 = $data1 . '"Sep"' . ',';
+          break;
+        case 10:
+          $data1 = $data1 . '"Oct"' . ',';
+          break;
+        case 11:
+          $data1 = $data1 . '"Nov"' . ',';
+          break;
+        case 12:
+          $data1 = $data1 . '"Dec"' . ',';
+          break;
+      }
       $data2 = $data2 . '"' . $row['TOTAL'] . '",';
     }
 

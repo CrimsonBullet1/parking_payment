@@ -30,8 +30,8 @@
 
 			// Execute the statement
 			if (oci_execute($statement)) {
-				echo "<script>alert('Staff successfully registered! Try login at Staff Login Page!');
-				window.location.href = '../staff_login.php';
+				echo "<script>alert('Staff successfully registered!');
+				window.location.href = '../staff.php';
 				</script>";
 			} 
 			else {
