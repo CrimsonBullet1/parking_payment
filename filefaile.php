@@ -1,2 +1,0 @@
-testt
-<?php echo 'something'?>
