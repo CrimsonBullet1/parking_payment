@@ -1,5 +1,4 @@
 <?php
-$servername = "localhost";
 $username = "parker";
 $password = "parking123$";
 
