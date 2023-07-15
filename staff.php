@@ -1,5 +1,5 @@
 <?php
-  include ("conn.php");
+  include ("config.php");
   //  session_start();
 
   //  if (!isset($_SESSION['user'])) {
@@ -119,7 +119,26 @@
       </div>
       <div class="modal-body">
         <!-- Form -->
-				
+        <div class="card-body">
+          <form id="editForm">
+            <div class="form-group">
+              <label for="id">ID</label>
+              <select name="id" id="editId" class="form-control form-control-rounded">
+                <option value="" selected disabled hidden>Choose Staff ID</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control form-control-rounded" name="name" id="editName" placeholder="Enter Your Name">
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-light btn-round px-5"><i class="fa fa-pencil"></i> Edit</button>
+            </div>
+          </form>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -139,7 +158,33 @@
       </div>
       <div class="modal-body">
         <!-- Form -->
-
+        <div class="card-body">
+          <form>
+            <div class="form-group">
+              <label for="input-6">Name</label>
+              <input type="text" class="form-control form-control-rounded" id="input-6" placeholder="Enter Your Name">
+            </div>
+            <div class="form-group">
+              <label for="input-7">Email</label>
+              <input type="text" class="form-control form-control-rounded" id="input-7" placeholder="Enter Your Email Address">
+            </div>
+            <div class="form-group">
+              <label for="input-8">Mobile</label>
+              <input type="text" class="form-control form-control-rounded" id="input-8" placeholder="Enter Your Mobile Number">
+            </div>
+            <div class="form-group">
+              <label for="input-9">Password</label>
+              <input type="text" class="form-control form-control-rounded" id="input-9" placeholder="Enter Password">
+            </div>
+            <div class="form-group">
+              <label for="input-10">Confirm Password</label>
+              <input type="text" class="form-control form-control-rounded" id="input-10" placeholder="Confirm Password">
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-light btn-round px-5"><i class="fa fa-pencil"></i> Delete</button>
+            </div>
+          </form>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -170,9 +215,8 @@
 						</div>
 						<div class="table-responsive">
 							<?php 
-								$query = "SELECT STAFFID, ROLE, NAME FROM STAFFS ORDER BY STAFFID";
-								$stmt = oci_parse($dbconn, $query);
-								if(oci_execute($stmt)) {
+								$stmt = $pdo->prepare("SELECT STAFFID, ROLE, NAME FROM STAFFS ORDER BY STAFFID");
+                $stmt->execute();
 							?>
 							<table id="editable_table" class="table table-hover align-items-center table-flush table-borderless" style="text-align: center;">
 								<thead>
@@ -184,32 +228,23 @@
 								</thead>
 								<tbody>
 									<?php 
-										while($rows = oci_fetch_row($stmt)) {
-
+										$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($rows as $row) {
 									?>
 									<tr>
-										<td><?php echo $rows[0]; ?></td>
+										<td><?php echo $row["STAFFID"]; ?></td>
 										<?php 
-											if($rows[1] == 1) {
+											if($row["ROLE"] == 1) {
 												echo "<td>Admin</td>";
 											}
-											else if($rows[1] == 2) {
+											else if($row["ROLE"] == 2) {
 												echo "<td>Staff</td>";
 											}
 										?>
-										<td><?php echo $rows[2]; ?></td>
+										<td><?php echo $row["NAME"]; ?></td>
 									</tr>
 									<?php 
-											} 
-										} 
-										else {
-											$e = oci_error($stmt);
-											print htmlentities($e['message']);
-											print "\n<pre>\n";
-											print htmlentities($e['sqltext']);
-											printf("\n%".($e['offset']+1)."s", "^");
-											print  "\n</pre>\n";
-										}
+                    }
 									?>
 								</tbody>
 							</table>
@@ -247,10 +282,39 @@
 
 <!-- Modal Style -->
 <style>
-	.modal, h5.modal-title{
-		color: black;
+	.modal-content{
+		background-color: #787572;
 	}
+
+  .modal-footer .btn {
+    color: #fff;
+    background-color: #666460;
+  }
 </style>
+
+<!-- AJAX forms -->
+<script>
+  $(document).ready(function () {
+    $("#editForm").submit(function (event) {
+      var formData = {
+        name: $("#editId").val(),
+        email: $("#editName").val()
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "staff_edit.w.php",
+        data: formData,
+        dataType: "json",
+        encode: true,
+      }).done(function (data) {
+        console.log(data);
+      });
+
+      event.preventDefault();
+    });
+  });
+</script>
 
 <!-- Bootstrap core JavaScript-->
 <script src="assets/js/jquery.min.js"></script>
