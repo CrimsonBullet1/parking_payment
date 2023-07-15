@@ -1,32 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-  <meta name="description" content=""/>
-  <meta name="author" content=""/>
-  <title>Dashtreme Admin - Free Dashboard for Bootstrap 4 by Codervent</title>
-  <!-- loader-->
-  <link href="assets/css/pace.min.css" rel="stylesheet"/>
-  <script src="assets/js/pace.min.js"></script>
-  <!--favicon-->
-  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-  <!-- simplebar CSS-->
-  <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
-  <!-- Bootstrap core CSS-->
-  <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
-  <!-- animate CSS-->
-  <link href="assets/css/animate.css" rel="stylesheet" type="text/css"/>
-  <!-- Icons CSS-->
-  <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
-  <!-- Sidebar CSS-->
-  <link href="assets/css/sidebar-menu.css" rel="stylesheet"/>
-  <!-- Custom Style-->
-  <link href="assets/css/app-style.css" rel="stylesheet"/>
-  
-  
+    <title>Parking Lot Reservation Application</title>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Dashtreme Admin - Free Dashboard for Bootstrap 4 by Codervent</title>
+    <!-- loader-->
+    <link href="assets/css/pace.min.css" rel="stylesheet"/>
+    <script src="assets/js/pace.min.js"></script>
+    <!--favicon-->
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <!-- simplebar CSS-->
+    <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
+    <!-- Bootstrap core CSS-->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- animate CSS-->
+    <link href="assets/css/animate.css" rel="stylesheet" type="text/css"/>
+    <!-- Icons CSS-->
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <!-- Sidebar CSS-->
+    <link href="assets/css/sidebar-menu.css" rel="stylesheet"/>
+    <!-- Custom Style-->
+    <link href="assets/css/app-style.css" rel="stylesheet"/>
 </head>
+
+<!--style start-->
+<style>
+    hr {
+        border: none;
+        border-top: 2px solid #ccc;
+        margin: 20px 0;
+    }
+
+    .reservation-container {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    h3 {
+        font-family: Arial, sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .btn-reserve {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .btn-reserve:hover {
+        background-color: #45a049;
+    }
+</style>
+<!--End style-->
 
 <body class="bg-theme bg-theme1">
 
@@ -111,9 +165,8 @@
    
    </div>
    <!--End sidebar-wrapper-->
-  
 
-<!--Start topbar header-->
+    <!--Start topbar header-->
 <header class="topbar-nav">
  <nav class="navbar navbar-expand fixed-top">
   <ul class="navbar-nav mr-auto align-items-center">
@@ -179,51 +232,46 @@
 </header>
 <!--End topbar header-->
 
-
+<!--Start Row-->
 <div class="clearfix"></div>
 	
-  <div class="content-wrapper">
-    <div class="container-fluid">
+    <div class="content-wrapper">
+      <div class="container-fluid">
+  
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">List of Available Parking Spaces</div>
+              <hr>
+                <div class="reservation-container">
+                    <?php
+                    // Get the selected lot from the query string
+                    $slotnum = $_GET['lot'];
 
-      <div class="col-lg-6">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-title">List of Available Parking Spaces</div>
-            <hr>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <div class="row">
-                  <div class="col-md-6">
-                    <h5>Floor 1</h5>
-                    <p>Available Spaces: <span id="available-spaces-1"></span></p>
-                    <p>Booked Spaces: <span id="booked-spaces-1"></span></p>
-                  </div>
-                  <div class="col-md-6">
-                    <button type="button" class="btn btn-primary" onclick="window.location.href = 'vehicle-register.html';">Book</button>
-                  </div>
+                    // Display the selected lot and a form to input reservation details
+                    echo '<h3>Reserve Parking Lot ' . $slotnum . '</h3>';
+                    echo '<form action="reservation.w.php" method="post">';
+                    echo '<div class="form-group">';
+                    echo '<label for="date">Date:</label>';
+                    echo '<input type="date" id="date" name="date" required>';
+                    echo '</div>';
+                    // Add more input fields for other reservation details
+                    echo '<input type="hidden" name="lot" value="' . $slotnum . '">';
+                    echo '<button type="submit" class="btn-reserve">Reserve</button>';
+                    echo '</form>';
+                    ?>
                 </div>
-              </li>
-              <li class="list-group-item">
-                <div class="row">
-                  <div class="col-md-6">
-                    <h5>Floor 2</h5>
-                    <p>Available Spaces: <span id="available-spaces-2"></span></p>
-                    <p>Booked Spaces: <span id="booked-spaces-2"></span></p>
+                    </div>
                   </div>
-                  <div class="col-md-6">
-                    <button type="button" class="btn btn-primary" onclick="window.location.href = 'vehicle-register.html';">Book</button>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      
-      <!--End Row-->
+                </li>
+              </ul>
+            </div>
 
-	<!--start overlay-->
-		  <div class="overlay toggle-menu"></div>
+        
+        <!--End Row-->
+
+<!--start overlay-->
+<div class="overlay toggle-menu"></div>
 		<!--end overlay-->
 
     </div>
