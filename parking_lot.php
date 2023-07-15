@@ -269,7 +269,9 @@
                 function reserveParkingLot(lotId) {
                     window.location.href = 'reservation.php?lot=' + lotId;
                 }
-                
+                else{
+                      <?php if ($parkingid == '0'){ ?> disabled <?php   } ?> onclick="reserveParkingLot(<?php echo $row["parkingid"]?>)" />
+                    }
             </script>
         
         <!--End Row-->
