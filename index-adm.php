@@ -1,5 +1,5 @@
 <?php
-  include ("conn.php");
+  include ("config.php");
   //  session_start();
 
   //  if (!isset($_SESSION['user'])) {
@@ -123,27 +123,25 @@
         <div class="card-content">
           <div class="row row-group m-0">
             <?php 
-              $query = "SELECT COUNT(*) AS TOTAL FROM RESERVATIONS";
-              $stmt = oci_parse($dbconn, $query);
-              oci_define_by_name($stmt, "TOTAL", $total_reserve);
-              oci_execute($stmt);
+              $stmt = $pdo->prepare("SELECT COUNT(*) AS TOTAL FROM RESERVATIONS");
+              $stmt->execute();
+              $total_reserve = $stmt->fetch(PDO::FETCH_COLUMN);
             ?>
             <div class="col-12 col-lg-6 col-xl-6 border-light">
               <div class="card-body">
-                <h5 class="text-white mb-0"><?php while(oci_fetch($stmt)) {echo $total_reserve;} ?> <span class="float-right"><i class="fa fa-car"></i></span></h5>
+                <h5 class="text-white mb-0"><?php echo $total_reserve; ?> <span class="float-right"><i class="fa fa-car"></i></span></h5>
                 <div class="progress my-3" style="height:3px;"></div>
                 <p class="mb-0 text-white small-font">Total Reservations</p>
               </div>
             </div>
             <?php 
-              $query = "SELECT SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS";
-              $stmt = oci_parse($dbconn, $query);
-              oci_define_by_name($stmt, "TOTAL", $total_revenue);
-              oci_execute($stmt);
+              $stmt = $pdo->prepare("SELECT SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS");
+              $stmt->execute();
+              $total_reserve = $stmt->fetch(PDO::FETCH_COLUMN);
             ?>
             <div class="col-12 col-lg-6 col-xl-6 border-light">
               <div class="card-body">
-                <h5 class="text-white mb-0">RM <?php while(oci_fetch($stmt)) {echo $total_revenue;} ?> <span class="float-right"><i class="fa fa-usd"></i></span></h5>
+                <h5 class="text-white mb-0">RM <?php echo $total_reserve; ?> <span class="float-right"><i class="fa fa-usd"></i></span></h5>
                 <div class="progress my-3" style="height:3px;"></div>
                 <p class="mb-0 text-white small-font">Total Revenue</p>
               </div>
@@ -164,38 +162,35 @@
         
             <div class="row m-0 row-group text-center border-top border-light-3">
               <?php 
-                $query = "SELECT MIN(TOTALCOST) AS MIN FROM RESERVATIONS";
-                $stmt = oci_parse($dbconn, $query);
-                oci_define_by_name($stmt, "MIN", $min_revenue);
-                oci_execute($stmt);
+                $stmt = $pdo->prepare("SELECT MIN(TOTALCOST) AS MIN FROM RESERVATIONS");
+                $stmt->execute();
+                $min_revenue = $stmt->fetch(PDO::FETCH_COLUMN);
               ?>
               <div class="col-12 col-lg-4">
                 <div class="p-3">
-                  <h5 class="mb-0">RM <?php while(oci_fetch($stmt)) {echo $min_revenue;} ?></h5>
+                  <h5 class="mb-0">RM <?php echo $min_revenue; ?></h5>
                   <small class="mb-0">Lowest Sales</small>
                 </div>
               </div>
               <?php 
-                $query = "SELECT MAX(TOTALCOST) AS MAX FROM RESERVATIONS";
-                $stmt = oci_parse($dbconn, $query);
-                oci_define_by_name($stmt, "MAX", $max_revenue);
-                oci_execute($stmt);
+                $stmt = $pdo->prepare("SELECT MAX(TOTALCOST) AS MAX FROM RESERVATIONS");
+                $stmt->execute();
+                $max_revenue = $stmt->fetch(PDO::FETCH_COLUMN);
               ?>
               <div class="col-12 col-lg-4">
                 <div class="p-3">
-                  <h5 class="mb-0">RM <?php while(oci_fetch($stmt)) {echo $max_revenue;} ?></h5>
+                  <h5 class="mb-0">RM <?php echo $max_revenue; ?></h5>
                   <small class="mb-0">Highest Sales</small>
                 </div>
               </div>
               <?php 
-                $query = "SELECT ROUND(AVG(TOTALCOST)) AS AVG FROM RESERVATIONS";
-                $stmt = oci_parse($dbconn, $query);
-                oci_define_by_name($stmt, "AVG", $avg_revenue);
-                oci_execute($stmt);
+                $stmt = $pdo->prepare("SELECT ROUND(AVG(TOTALCOST)) AS AVG FROM RESERVATIONS");
+                $stmt->execute();
+                $avg_revenue = $stmt->fetch(PDO::FETCH_COLUMN);
               ?>
               <div class="col-12 col-lg-4">
                 <div class="p-3">
-                  <h5 class="mb-0">RM <?php while(oci_fetch($stmt)) {echo $avg_revenue;} ?></h5>
+                  <h5 class="mb-0">RM <?php echo $avg_revenue; ?></h5>
                   <small class="mb-0">Average Sales</small>
                 </div>
               </div>
@@ -211,9 +206,8 @@
             <div class="card-header">Reservations</div>
             <div class="table-responsive">
               <?php 
-                $query = "SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID)";
-                $stmt = oci_parse($dbconn, $query);
-                if(oci_execute($stmt)) {
+                $stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID)");
+                $stmt->execute();
               ?>
               <table class="table table-striped align-items-center table-flush table-borderless" style="text-align: center;">
                 <thead>
@@ -229,29 +223,21 @@
                 </thead>
                 <tbody>
                   <?php 
-                    while($rows = oci_fetch_row($stmt)) {
+                    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($rows as $row) {
 
                   ?>
                   <tr>
-                    <td><?php echo $rows[0]; ?></td>
-                    <td><?php echo $rows[1]; ?> days</td>
-                    <td>RM <?php echo $rows[2]; ?></td>
-                    <td><?php echo $rows[3]; ?></td>
-                    <td><?php echo $rows[4]; ?></td>
-                    <td><?php echo $rows[5]; ?></td>
-                    <td><?php echo $rows[6]; ?></td>
+                    <td><?php echo $row["RESERVATIONID"]; ?></td>
+                    <td><?php echo $row["DURATION"]; ?> days</td>
+                    <td>RM <?php echo $row["TOTALCOST"]; ?></td>
+                    <td><?php echo $row["CUSTNAME"]; ?></td>
+                    <td><?php echo $row["NAME"]; ?></td>
+                    <td><?php echo $row["PARKINGID"]; ?></td>
+                    <td><?php echo $row["RESERVEDATE"]; ?></td>
                   </tr>
                   <?php 
-                      } 
                     } 
-                    else {
-                      $e = oci_error($stmt);
-                      print htmlentities($e['message']);
-                      print "\n<pre>\n";
-                      print htmlentities($e['sqltext']);
-                      printf("\n%".($e['offset']+1)."s", "^");
-                      print  "\n</pre>\n";
-                    }
                   ?>
                 </tbody>
               </table>
@@ -308,11 +294,10 @@
   $data1 = "";
   $data2 = "";
 
-  $query = "SELECT EXTRACT(MONTH FROM RESERVATION_DATE) AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY EXTRACT(MONTH FROM RESERVATION_DATE) ORDER BY 1";
-  $stmt = oci_parse($dbconn, $query);
-  oci_define_by_name($stmt, "TOTAL", $sum_cost);
-  if(oci_execute($stmt)) {
-    while($row = oci_fetch_array($stmt)) {
+  $stmt = $pdo->prepare("SELECT EXTRACT(MONTH FROM RESERVATION_DATE) AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY EXTRACT(MONTH FROM RESERVATION_DATE) ORDER BY 1");
+  $stmt->execute();
+  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach($rows as $row) {
       switch($row['RESERVEDATE']) {
         case 1:
           $data1 = $data1 . '"Jan"' . ',';
@@ -356,15 +341,6 @@
 
     $data1 = trim($data1,",");
     $data2 = trim($data2,",");
-  }
-  else {
-    $e = oci_error($stmt);
-    print htmlentities($e['message']);
-    print "\n<pre>\n";
-    print htmlentities($e['sqltext']);
-    printf("\n%".($e['offset']+1)."s", "^");
-    print  "\n</pre>\n";
-  }
 ?>
 
 <script>
