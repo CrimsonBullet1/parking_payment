@@ -250,7 +250,7 @@
                     $currentDate = date('Y-m-d');
 
                     // Display the parking lots
-                    foreach ($parkingLots as $slotnum) {
+                    foreach ($parkingLots as $lot) {
                         $reserved = ($slotnum['date'] == $currentDate) ? 'reserved' : 'available';
                         $status = ($slotnum['date'] == $currentDate) ? 'Reserved' : 'Available';
                         echo '<div class="parking-lot ' . $reserved . '" onclick="reserveParkingLot(' . $slotnum['id'] . ')">';
@@ -269,9 +269,6 @@
                 function reserveParkingLot(lotId) {
                     window.location.href = 'reservation.php?lot=' + lotId;
                 }
-                else{
-                      <?php if ($parkingid == '0'){ ?> disabled <?php   } ?> onclick="reserveParkingLot(<?php echo $row["parkingid"]?>)" />
-                    }
             </script>
         
         <!--End Row-->
