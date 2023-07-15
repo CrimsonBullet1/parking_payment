@@ -122,17 +122,22 @@
         <div class="card-body">
           <form id="editForm">
             <div class="form-group">
+              <?php
+                $stmt = $pdo->prepare("SELECT STAFFID FROM STAFFS");
+                $stmt->execute();
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+              ?>
               <label for="id">ID</label>
               <select name="id" id="editId" class="form-control form-control-rounded">
                 <option value="" selected disabled hidden>Choose Staff ID</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                <?php 
+                  foreach($rows as $row) {
+                    echo "<option value='" . $row['STAFFID'] . "'>" . $row['STAFFID'] . "</option>";
+                  }
+                ?>
               </select>
             </div>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control form-control-rounded" name="name" id="editName" placeholder="Enter Your Name">
+            <div class="form-group" id="editName">
             </div>
             <div class="form-group">
               <button type="submit" class="btn btn-light btn-round px-5"><i class="fa fa-pencil"></i> Edit</button>
@@ -159,29 +164,29 @@
       <div class="modal-body">
         <!-- Form -->
         <div class="card-body">
-          <form>
+        <form id="editForm" enctype="multipart/form-data">
             <div class="form-group">
-              <label for="input-6">Name</label>
-              <input type="text" class="form-control form-control-rounded" id="input-6" placeholder="Enter Your Name">
+              <?php
+                $stmt = $pdo->prepare("SELECT STAFFID FROM STAFFS");
+                $stmt->execute();
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+              ?>
+              <label for="id">ID</label>
+              <select name="id" id="editId" class="form-control form-control-rounded">
+                <option value="" selected disabled hidden>Choose Staff ID</option>
+                <?php 
+                  foreach($rows as $row) {
+                    echo "<option value='" . $row['STAFFID'] . "'>" . $row['STAFFID'] . "</option>";
+                  }
+                ?>
+              </select>
             </div>
             <div class="form-group">
-              <label for="input-7">Email</label>
-              <input type="text" class="form-control form-control-rounded" id="input-7" placeholder="Enter Your Email Address">
+              <label for="name">Name</label>
+              <input type="text" class="form-control form-control-rounded" name="name" id="editName" placeholder="Enter Your Name">
             </div>
             <div class="form-group">
-              <label for="input-8">Mobile</label>
-              <input type="text" class="form-control form-control-rounded" id="input-8" placeholder="Enter Your Mobile Number">
-            </div>
-            <div class="form-group">
-              <label for="input-9">Password</label>
-              <input type="text" class="form-control form-control-rounded" id="input-9" placeholder="Enter Password">
-            </div>
-            <div class="form-group">
-              <label for="input-10">Confirm Password</label>
-              <input type="text" class="form-control form-control-rounded" id="input-10" placeholder="Confirm Password">
-            </div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-light btn-round px-5"><i class="fa fa-pencil"></i> Delete</button>
+              <button type="submit" class="btn btn-light btn-round px-5" style="background-color: #801919;"><i class="fa fa-trash"></i> Delete</button>
             </div>
           </form>
         </div>
@@ -227,7 +232,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<?php 
+									<?php
 										$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach($rows as $row) {
 									?>
@@ -313,6 +318,24 @@
 
       event.preventDefault();
     });
+  });
+</script>
+
+<!-- Form Trigger -->
+<script>
+  $(document).ready(function() {
+    $('#editId').change(function() {
+      var id = $(this).val();
+      console.log(id);
+      $.ajax({
+        method: 'POST',
+        url: 'staff_edit_ajax.php',
+        data: 'id=' + id
+      }).done(function(name)) {
+        console.log(name);
+        name = JSON.parse(name);
+      }
+    })
   });
 </script>
 

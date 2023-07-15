@@ -24,10 +24,9 @@ if(isset($_POST["submit"])){
         // Login successful
         $_SESSION['staffid'] = $row['STAFFID'];
         $_SESSION['role'] = $row['ROLE'];
-        $_SESSION['firstname'] = $row['FIRSTNAME'];
-        $_SESSION['lastname'] = $row['LASTNAME'];
+        $_SESSION['name'] = $row['NAME'];
         $_SESSION['password'] = $row['PASSWORD'];
-       header("Location: ..\index-adm.php");
+        header("Location: ..\index-adm.php");
     } else {
         // Login failed
         echo "<script>alert('Invalid username or password! Please try again!');

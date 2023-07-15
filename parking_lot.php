@@ -1,3 +1,7 @@
+<?php 
+  include 'config.php';
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,6 +64,7 @@
         .reserved {
             background-color: #FF5A5A;
             color: white;
+
         }
 
         .available {
@@ -232,32 +237,30 @@
               <div class="card-title">List of Available Parking Spaces</div>
               <hr>
                     <?php
-                    // Data from the database
-                    $parkingLots = [
-                        ['id' => 1, 'date' => '2023-07-11'],
-                        ['id' => 2, 'date' => '2023-07-12'],
-                        ['id' => 3, 'date' => '2023-07-13'],
-                        ['id' => 4, 'date' => '2023-07-11'],
-                        ['id' => 5, 'date' => '2023-07-12'],
-                        ['id' => 6, 'date' => '2023-07-13'],
-                        ['id' => 7, 'date' => '2023-07-12'],
-                        ['id' => 8, 'date' => '2023-07-13'],
-                        ['id' => 9, 'date' => '2023-07-13'],
-                        ['id' => 10, 'date' => '2023-07-11'],
-                    ];
 
-                    // Get the current date
-                    $currentDate = date('Y-m-d');
+                      $stmt = $pdo->prepare("SELECT PARKINGID, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS LEFT JOIN RESERVATIONS USING(PARKINGID)");
+                      $stmt->execute();
+                      $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                    // Display the parking lots
-                    foreach ($parkingLots as $lot) {
-                        $reserved = ($slotnum['date'] == $currentDate) ? 'reserved' : 'available';
-                        $status = ($slotnum['date'] == $currentDate) ? 'Reserved' : 'Available';
-                        echo '<div class="parking-lot ' . $reserved . '" onclick="reserveParkingLot(' . $slotnum['id'] . ')">';
-                        echo '<span class="lot-number">' . $slotnum['id'] . '</span>';
+                      // Data from the database
+                      foreach($rows as $row) {
+                          $parkingLots[] = ['id' => $row['PARKINGID'], 'date' => $row['RESERVATION_DATE']];
+                      }
+                      
+                      // Get the current date
+                      $currentDate = date('Y-m-d');
+
+                      // Display the parking lots
+                      foreach ($parkingLots as $lot) {
+                        $reserved = ($lot['date'] == $currentDate) ? 'reserved disabled' : 'available';
+                        $status = ($lot['date'] == $currentDate) ? 'Reserved' : 'Available';
+                        echo '<div class="parking-lot ' . $reserved . '" onclick="reserveParkingLot(' . $lot['id'] . ')">';
+                        echo '<span class="lot-number">' . $lot['id'] . '</span>';
                         echo '<span class="lot-status">' . $status . '</span>';
                         echo '</div>';
-                    }
+                      }
+                      
+                      
                     ?>
                     </div>
                   </div>
@@ -269,6 +272,7 @@
                 function reserveParkingLot(lotId) {
                     window.location.href = 'reservation.php?lot=' + lotId;
                 }
+                
             </script>
         
         <!--End Row-->
@@ -336,7 +340,6 @@
   <!--end color switcher-->
    
   </div><!--End wrapper-->
-
 
   <!-- Bootstrap core JavaScript-->
   <script src="assets/js/jquery.min.js"></script>
