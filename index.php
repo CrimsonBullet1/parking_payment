@@ -1,6 +1,6 @@
 <?php
    session_start();
-
+   include('config.php');
    if (!isset($_SESSION['customerid'])) {
     header("Location: login.php");
     exit();
@@ -62,25 +62,15 @@
           <i class="zmdi zmdi-format-list-bulleted"></i> <span>Reservations</span>
         </a>
       </li>
-
-      <li>
-        <a href="profile.php">
-          <i class="zmdi zmdi-face"></i> <span>Profile</span>
-          <a href="logout.php">Logout</a>
-        </a>
-      </li>
-
-      <!-- <li class="sidebar-header">LABELS</li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-coffee text-danger"></i> <span>Important</span></a></li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-chart-donut text-success"></i> <span>Warning</span></a></li>
-      <li><a href="javaScript:void();"><i class="zmdi zmdi-share text-info"></i> <span>Information</span></a></li> -->
     </ul>
   </div>
 <!--End sidebar-wrapper-->
 
 <!--Start topbar header-->
+
 <header class="topbar-nav">
   <nav class="navbar navbar-expand fixed-top">
+    
     <ul class="navbar-nav mr-auto align-items-center">
       <li class="nav-item">
         <a class="nav-link toggle-menu" href="javascript:void();">
@@ -90,6 +80,8 @@
     </ul>
       
     <ul class="navbar-nav align-items-center right-nav-link">
+    <?php echo "Hello "." ".$_SESSION['firstname'] ?>
+
       <li class="nav-item">
         <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
           <span class="user-profile"><img src="https://via.placeholder.com/110x110" class="img-circle" alt="user avatar"></span>
@@ -99,15 +91,20 @@
             <a href="javaScript:void();">
               <div class="media">
                 <div class="avatar"><img class="align-self-start mr-3" src="https://via.placeholder.com/110x110" alt="user avatar"></div>
-                <div class="media-body">
-                <!-- <h6 class="mt-2 user-title">Sarajhon Mccoy</h6>
-                <p class="user-subtitle">mccoy@example.com</p> -->
-                </div>
               </div>
             </a>
           </li>
           <li class="dropdown-divider"></li>
-          <li class="dropdown-item"><i class="icon-power mr-2"></i> Logout</li>
+          <li class="dropdown-item">
+            <a href="profile.php">
+              <i class="fa fa-user"></i> Profile
+            </a>
+          </li>
+          <li class="dropdown-item">
+            <a href="logout.php">  
+              <i class="fa fa-sign-out"></i> Logout
+            </a>
+          </li>
         </ul>
       </li>
     </ul>
@@ -123,24 +120,49 @@
           <div class="card">
             <div class="card-header">Parking Reservation Request</div>
             <div class="table-responsive">
-              <table class="table align-items-center table-flush table-borderless">
-                <thead>
-                  <tr>
-                    <th>No.</th>
-                    <th>Parking Slot No.</th>
-                    <th>Date Ordered</th>
-                    <th>Date Reservations</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>A101</td>
-                    <td>03 Aug 2023</td>
-                    <td>20 Aug 2023</td>
-                    <td>PENDING</td>
-                  </tr>
+            <?php
+$stmt = $pdo->prepare("SELECT SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS, PARKINGID 
+                       FROM RESERVATIONS 
+                       JOIN CUSTOMERS USING(CUSTOMERID)
+                       JOIN PARKING_LOTS USING(PARKINGID)
+                       WHERE CUSTOMERID = :customerid");
+$stmt->bindValue(':customerid', $_SESSION['customerid']);
+$stmt->execute();
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<table class="table align-items-center table-flush table-borderless">
+  <thead>
+    <tr>
+      <th>Parking Slot No.</th>
+      <th>Duration</th>
+      <th>Total</th>
+      <th>Date Reservations</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+  <?php foreach ($rows as $row) : ?>
+    <?php if ($row['PARKINGID'] !== null) : ?>
+      <tr>
+        <td><?php echo $row['SLOTNUM'] ?></td>
+        <td><?php echo $row['DURATION'] ?> days</td>
+        <td>RM <?php echo $row['TOTALCOST'] ?></td>
+        <td><?php echo $row['RESERVEDATE'] ?></td>
+        <td><?php echo $row['STATUS'] ?></td>
+      </tr>
+    <?php endif; ?>
+  <?php endforeach; ?>
+
+  <?php if (empty($row['PARKINGID'])) : ?>
+    <tr>
+      <td colspan="4">You have not make any reservation parking.</td>
+      <td colspan="1"><button type="submit" class="btn btn-light btn-round px-5" style="background-color: #1ad622;" onclick="window.location.href = 'reservation.php';"><i class="fa fa-check"></i> Make A Reservation</button></td>
+    </tr>
+  <?php endif; ?>
+</tbody>
+</table>
+
                 </tbody>
               </table>
             </div>
@@ -167,7 +189,6 @@
 	<footer class="footer">
     <div class="container">
       <div class="text-center">
-        Copyright © 2018 Dashtreme Admin
       </div>
     </div>
   </footer>
