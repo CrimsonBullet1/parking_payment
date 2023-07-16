@@ -1,4 +1,5 @@
 <?php
+session_start();
 $username = "parker";
 $password = "parking123$";
 
