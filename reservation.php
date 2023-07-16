@@ -189,85 +189,81 @@ include('config.php');
             <div class="card-body">
               <div class="card-title">Parking Details</div>
               <hr>
-                <div class="reservation-container">
-                <?php
-                // Get the selected lot from the query string
-                $lot = $_GET['lot'];
-                ?>
+              <div class="reservation-container">
+              <?php
+              // Get the selected lot from the query string
+              $lot = $_GET['lot'];
+              ?>
 
-                <h3>Reserve Parking Lot <?php echo $lot; ?></h3>
+              <h3>Reserve Parking Lot <?php echo $lot; ?></h3>
 
-                <form action="work/reservation.w.php" method="post">
+              <form action="work/reservation.w.php" method="post">
+                  <input type="hidden" class="form-control" id="parkingid" name="parkingid" value="<?php echo $lot; ?>" required>
+                  <input type="hidden" class="form-control" id="reservationid" name="reservationid" required>
+
                   <div class="form-group">
-                    <!-- <label for="parkingid">Parking ID:</label> -->
-                    <input type="hidden" class="form-control" id="parkingid" name="parkingid" value="<?php echo $lot ?>"required>
-                  </div>
-                  <div class="form-group">
-                    <!-- <label for="reservationid">Reservation ID:</label> -->
-                    <input type="hidden" class="form-control" id="reservationid" name="reservationid" required>
-                  </div>
-                  <!-- Form Duration -->
-                  <div class="form-group">
-                    <label for="duration">Duration:</label>
-                    <input type="number" class="form-control" id="duration" placeholder="Days" name="duration" required>
-                  </div>
-                  <!-- Form Date -->
-                  <div class="form-group">
-                    <label for="date">Date:</label>
-                    <input type="date" class="form-control" id="reservation_date" name="reservation_date" required>
+                      <label for="duration">Duration:</label>
+                      <input type="number" class="form-control" id="duration" placeholder="Days" name="duration" required>
                   </div>
 
                   <div class="form-group">
-                                        
-                  <?php 
-                   $stmt = $pdo->prepare("SELECT DURATION
-                                         FROM RESERVATIONS
-                                         JOIN CUSTOMERS 
-                                         USING(CUSTOMERID)
-                                         WHERE CUSTOMERID = :customerid");
-                   
-                   $stmt->bindParam(':customerid', $_SESSION['customerid']);
-                   $stmt->bindParam(':duration', $_SESSION['duration']);
-                   $stmt->execute();?>
-                   
-                                   
+                      <label for="date">Date:</label>
+                      <input type="date" class="form-control" id="reservation_date" name="reservation_date" required>
                   </div>
 
-                  <!-- <input type="hidden" name="lot" value="<?php echo $slotnum; ?>"> -->
-                  <?php 
-                    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    foreach ($rows as $row)            
-                  ?>
-                
-                  <tr>
-                    <td>
-                    
-                    <!-- Form Totalcost Calculate Duration -->
-                    <?php               
-                    $duration = $row['DURATION'];
-                    $totalcost = $duration * 50;
-                    ?>
+                  <div class="form-group">
+                      <label for="totalcost">Total Cost:</label>
+                      <div id="totalCostPlaceholder"></div>
+                  </div>
 
                   <!-- Calculation Button -->
                   <td>
-                  <div class="calculatecost">
-                    <label for="totalcost">Total Cost:</label>
-                    <div id="totalCostPlaceholder"></div>
-                    <button type="button" class="btn btn-light px-4" id="calculateTotal">Calculate</button>
-                  </div>
+                      <div class="calculatecost">
+                          <div class="form-group">
+                            <button type="button" class="btn btn-light px-4" id="calculateTotal">Calculate</button>
+                          </div>
+                      </div>
 
-                  <br>
                   <!-- Submit Button -->
-                  <div class="submit">
-                    <a href="checkout.php"><button type="button" class="btn btn-light px-5">ADD TO CART</button></a>
+                  <div class="form-group">
+                      <a href="checkout.php"><button type="submit" class="btn btn-light px-5">ADD TO CART</button></a>
                   </div>
+              </form>
+              </div>
+
+
+              <div class="form-group">                         
+                <?php 
+                $stmt = $pdo->prepare("SELECT DURATION
+                                      FROM RESERVATIONS
+                                      JOIN CUSTOMERS 
+                                      USING(CUSTOMERID)
+                                      WHERE CUSTOMERID = :customerid");
+                    
+                $stmt->bindParam(':customerid', $_SESSION['customerid']);
+                $stmt->bindParam(':duration', $_SESSION['duration']);
+                $stmt->execute();?>
+              </div>
+
+                <!-- <input type="hidden" name="lot" value="<?php echo $slotnum; ?>"> -->
+                <?php 
+                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                  foreach ($rows as $row)            
+                ?>
+                <tr>
+                <td>
+                <!-- Form Totalcost Calculate Duration -->
+                <?php               
+                $duration = $row['DURATION'];
+                $totalcost = $duration * 50;
+                ?>
                 </div>
               </div>
             </div>
           </li>
-          </ul>
-        </div>      
-        <!--End Row-->
+        </ul>
+      </div>      
+      <!--End Row-->
 
     <!--start overlay-->
       <div class="overlay toggle-menu"></div>
