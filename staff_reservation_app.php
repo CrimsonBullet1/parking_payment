@@ -1,9 +1,9 @@
 <?php
   include ("config.php");
-  //  if (!isset($_SESSION['user'])) {
-  //   header("Location: login.php");
-  //   exit();
-  //  }
+  if (!isset($_SESSION['ID'])) {
+    header("Location: login.php");
+    exit();
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +38,6 @@
 </head>
 
 <body class="bg-theme bg-theme1">
-  
 <!-- Start wrapper-->
 <div id="wrapper">
   <!--Start sidebar-wrapper-->
@@ -250,7 +249,7 @@
 						</div>
 						<div id="table" class="table-responsive">
 							<?php 
-								$stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, FLAG, STATUS_PAYMENT FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID) ORDER BY RESERVATIONID");
+								$stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, SLOTNUM, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, FLAG, STATUS_PAYMENT FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) LEFT JOIN STAFFS USING(STAFFID) JOIN PARKING_LOTS USING(PARKINGID) ORDER BY RESERVATIONID");
                 $stmt->execute();
 							?>
 							<table id="editable_table" class="table table-hover align-items-center table-flush table-borderless" style="text-align: center;">
@@ -277,22 +276,29 @@
                     <td><?php echo $row["DURATION"]; ?> days</td>
                     <td>RM <?php echo $row["TOTALCOST"]; ?></td>
                     <td><?php echo $row["CUSTNAME"]; ?></td>
-                    <td><?php echo $row["NAME"]; ?></td>
-                    <td><?php echo $row["PARKINGID"]; ?></td>
+                    <?php 
+                      if($row["NAME"] == null) {
+                        echo "<td >NOT ASSIGNED</td>";
+                      }
+                      else {
+                        echo "<td>" . $row["NAME"] . "</td>";
+                      }
+                    ?>
+                    <td><?php echo $row["SLOTNUM"]; ?></td>
                     <td><?php echo $row["RESERVEDATE"]; ?></td>
 										<?php 
 											if($row['FLAG'] == 1) {
 												echo "<td style='color: #1ad622;'>&#10004;</td>";
+                        if($row['STATUS_PAYMENT'] == 1) {
+                          echo "<td style='color: #1ad622;'>PAID</td>";
+                        }
+                        else {
+                          echo "<td style='color: #ecf545;'>PENDING</td>";
+                        }
 											}
 											else {
 												echo "<td style='color: #d90000'>&#10006;</td>";
-											}
-
-											if($row['STATUS_PAYMENT'] == 1) {
-												echo "<td style='color: #1ad622;'>PAID</td>";
-											}
-											else {
-												echo "<td style='color: #ecf545;'>PENDING</td>";
+                        echo "<td> - </td>";
 											}
 										?>
                   </tr>

@@ -1,12 +1,11 @@
 <?php
-  include ("config.php");
-   session_start();
-  //  print_r($_SESSION);
 
-  if (!isset($_SESSION['staffid'])) {
+  include ("config.php");
+
+  if (!isset($_SESSION['ID'])) {
     header("Location: login.php");
- exit();
-}
+    exit();
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,7 +39,6 @@
 </head>
 
 <body class="bg-theme bg-theme1">
-  
 <!-- Start wrapper-->
 <div id="wrapper">
   <!--Start sidebar-wrapper-->
@@ -130,7 +128,7 @@
         <div class="card-content">
           <div class="row row-group m-0">
             <?php 
-              $stmt = $pdo->prepare("SELECT COUNT(*) AS TOTAL FROM RESERVATIONS");
+              $stmt = $pdo->prepare("SELECT COUNT(*) AS TOTAL FROM RESERVATIONS WHERE FLAG = 1");
               $stmt->execute();
               $total_reserve = $stmt->fetch(PDO::FETCH_COLUMN);
             ?>
@@ -142,13 +140,23 @@
               </div>
             </div>
             <?php 
-              $stmt = $pdo->prepare("SELECT SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS");
+              $stmt = $pdo->prepare("SELECT SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS WHERE STATUS_PAYMENT = 1");
               $stmt->execute();
               $total_reserve = $stmt->fetch(PDO::FETCH_COLUMN);
             ?>
             <div class="col-12 col-lg-6 col-xl-6 border-light">
               <div class="card-body">
-                <h5 class="text-white mb-0">RM <?php echo $total_reserve; ?> <span class="float-right"><i class="fa fa-usd"></i></span></h5>
+                <h5 class="text-white mb-0">RM 
+                  <?php 
+                    if($total_reserve == null) {
+                      echo "0";
+                    }
+                    else {
+                      echo $total_reserve;
+                    } 
+                  ?> 
+                  <span class="float-right"><i class="fa fa-usd"></i></span>
+                </h5>
                 <div class="progress my-3" style="height:3px;"></div>
                 <p class="mb-0 text-white small-font">Total Revenue</p>
               </div>
@@ -169,35 +177,62 @@
         
             <div class="row m-0 row-group text-center border-top border-light-3">
               <?php 
-                $stmt = $pdo->prepare("SELECT MIN(TOTALCOST) AS MIN FROM RESERVATIONS");
+                $stmt = $pdo->prepare("SELECT MIN(TOTALCOST) AS MIN FROM RESERVATIONS WHERE STATUS_PAYMENT = 1");
                 $stmt->execute();
                 $min_revenue = $stmt->fetch(PDO::FETCH_COLUMN);
               ?>
               <div class="col-12 col-lg-4">
                 <div class="p-3">
-                  <h5 class="mb-0">RM <?php echo $min_revenue; ?></h5>
+                  <h5 class="mb-0">RM 
+                    <?php 
+                      if($min_revenue == null) {
+                        echo "0";
+                      }
+                      else {
+                        echo $min_revenue;
+                      } 
+                    ?> 
+                  </h5>
                   <small class="mb-0">Lowest Sales</small>
                 </div>
               </div>
               <?php 
-                $stmt = $pdo->prepare("SELECT MAX(TOTALCOST) AS MAX FROM RESERVATIONS");
+                $stmt = $pdo->prepare("SELECT MAX(TOTALCOST) AS MAX FROM RESERVATIONS WHERE STATUS_PAYMENT = 1");
                 $stmt->execute();
                 $max_revenue = $stmt->fetch(PDO::FETCH_COLUMN);
               ?>
               <div class="col-12 col-lg-4">
                 <div class="p-3">
-                  <h5 class="mb-0">RM <?php echo $max_revenue; ?></h5>
+                  <h5 class="mb-0">RM 
+                    <?php 
+                      if($max_revenue == null) {
+                        echo "0";
+                      }
+                      else {
+                        echo $max_revenue;
+                      } 
+                    ?>
+                  </h5>
                   <small class="mb-0">Highest Sales</small>
                 </div>
               </div>
               <?php 
-                $stmt = $pdo->prepare("SELECT ROUND(AVG(TOTALCOST)) AS AVG FROM RESERVATIONS");
+                $stmt = $pdo->prepare("SELECT ROUND(AVG(TOTALCOST)) AS AVG FROM RESERVATIONS WHERE STATUS_PAYMENT = 1");
                 $stmt->execute();
                 $avg_revenue = $stmt->fetch(PDO::FETCH_COLUMN);
               ?>
               <div class="col-12 col-lg-4">
                 <div class="p-3">
-                  <h5 class="mb-0">RM <?php echo $avg_revenue; ?></h5>
+                  <h5 class="mb-0">RM 
+                    <?php 
+                      if($avg_revenue == null) {
+                        echo "0";
+                      }
+                      else {
+                        echo $avg_revenue;
+                      } 
+                    ?>
+                  </h5>
                   <small class="mb-0">Average Sales</small>
                 </div>
               </div>
@@ -213,11 +248,7 @@
             <div class="card-header">Reservations</div>
             <div class="table-responsive">
               <?php 
-                $stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE 
-                                       FROM RESERVATIONS 
-                                       JOIN CUSTOMERS USING(CUSTOMERID) 
-                                       JOIN STAFFS USING(STAFFID) 
-                                       ORDER BY RESERVATIONID");
+                $stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID) ORDER BY RESERVATIONID");
                 $stmt->execute();
               ?>
               <table class="table table-striped align-items-center table-flush table-borderless" style="text-align: center;">
@@ -230,13 +261,13 @@
                     <th>Staff Name</th>
                     <th>Parking Lot</th>
                     <th>Reservation Date</th>
+                    <th>Payment Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php 
                     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach($rows as $row) {
-
                   ?>
                   <tr>
                     <td><?php echo $row["RESERVATIONID"]; ?></td>
@@ -244,11 +275,27 @@
                     <td>RM <?php echo $row["TOTALCOST"]; ?></td>
                     <td><?php echo $row["CUSTNAME"]; ?></td>
                     <td><?php echo $row["NAME"]; ?></td>
-                    <td><?php echo $row["PARKINGID"]; ?></td>
+                    <td><?php echo $row["SLOTNUM"]; ?></td>
                     <td><?php echo $row["RESERVEDATE"]; ?></td>
+                    <?php
+                      if($row['STATUS_PAYMENT'] == 1) {
+                          echo "<td style='color: #1ad622;'>PAID</td>";
+                        }
+                        else {
+                          echo "<td style='color: #ecf545;'>PENDING</td>";
+                      }
+                    ?>
                   </tr>
                   <?php 
-                    } 
+                    }
+                    
+                    if(empty($row["RESERVATIONID"])) {
+                      echo "
+                        <tr>
+                          <td colspan='8'>No reservation data is available</td>
+                        </tr>
+                      ";
+                    }
                   ?>
                 </tbody>
               </table>
@@ -305,7 +352,7 @@
   $data1 = "";
   $data2 = "";
 
-  $stmt = $pdo->prepare("SELECT EXTRACT(MONTH FROM RESERVATION_DATE) AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS GROUP BY EXTRACT(MONTH FROM RESERVATION_DATE) ORDER BY 1");
+  $stmt = $pdo->prepare("SELECT EXTRACT(MONTH FROM RESERVATION_DATE) AS RESERVEDATE, SUM(TOTALCOST) AS TOTAL FROM RESERVATIONS WHERE STATUS_PAYMENT = 1 GROUP BY EXTRACT(MONTH FROM RESERVATION_DATE) ORDER BY 1");
   $stmt->execute();
   $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach($rows as $row) {
