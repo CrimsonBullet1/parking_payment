@@ -241,33 +241,53 @@
         <div class="col-lg-6">
           <div class="card">
             <div class="card-body">
-              <div class="card-title">List of Available Parking Spaces</div>
+              <div class="card-title">Parking Details</div>
               <hr>
                 <div class="reservation-container">
-                    <?php
-                    // Get the selected lot from the query string
-                    $slotnum = $_GET['lot'];
+                <?php
+                // Get the selected lot from the query string
+                $slotnum = $_GET['lot'];
+                ?>
 
-                    // Display the selected lot and a form to input reservation details
-                    echo '<h3>Reserve Parking Lot ' . $slotnum . '</h3>';
-                    echo '<form action="reservation.w.php" method="post">';
-                    echo '<div class="form-group">';
-                    echo '<label for="date">Date:</label>';
-                    echo '<input type="date" id="date" name="date" required>';
-                    echo '</div>';
-                    // Add more input fields for other reservation details
-                    echo '<input type="hidden" name="lot" value="' . $slotnum . '">';
-                    echo '<button type="submit" class="btn-reserve">Reserve</button>';
-                    echo '</form>';
-                    ?>
-                </div>
-                    </div>
+                <h3>Reserve Parking Lot <?php echo $slotnum; ?></h3>
+
+                <form action="reservation.w.php" method="post">
+                  <div class="form-group">
+                    <label for="parkingid">Parking ID:</label>
+                    <input type="text" class="form-control" id="parkingid" name="parkingid" required>
                   </div>
-                </li>
-              </ul>
-            </div>
 
-        
+                  <div class="form-group">
+                    <label for="reservationid">Reservation ID:</label>
+                    <input type="text" class="form-control" id="reservationid" name="reservationid" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="totalcost">Total Cost:</label>
+                    <input type="text" class="form-control" id="totalcost" name="totalcost" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="duration">Duration:</label>
+                    <input type="time" class="form-control" id="duration" name="duration" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" class="form-control" id="date" name="date" required>
+                  </div>
+
+                  <input type="hidden" name="lot" value="<?php echo $slotnum; ?>">
+
+                  <button type="submit" class="btn btn-light px-5"><i class="zmdi zmdi-dot-circle"></i> Submit </button>
+                </form>
+
+                </div>
+              </div>
+            </div>
+          </li>
+          </ul>
+        </div>      
         <!--End Row-->
 
 <!--start overlay-->
