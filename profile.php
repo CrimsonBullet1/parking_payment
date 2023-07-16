@@ -62,13 +62,6 @@
           <i class="zmdi zmdi-format-list-bulleted"></i> <span>Reservations</span>
         </a>
       </li>
-
-      <li>
-        <a href="profile.php">
-          <i class="zmdi zmdi-face"></i> <span>Profile</span>
-          <a href="logout.php">Logout</a>
-        </a>
-      </li>
     </ul>
    
    </div>
@@ -110,8 +103,8 @@
            <div class="media">
              <div class="avatar"><img class="align-self-start mr-3" src="https://via.placeholder.com/110x110" alt="user avatar"></div>
             <div class="media-body">
-            <h6 class="mt-2 user-title">Sarajhon Mccoy</h6>
-            <p class="user-subtitle">mccoy@example.com</p>
+            <h6 class="mt-2 user-title"><?php echo $_SESSION['firstname']." ".$_SESSION['lastname']?></h6>
+            <p class="user-subtitle"><?php echo $_SESSION['email']?></p>
             </div>
            </div>
           </a>
@@ -143,7 +136,7 @@
                     <a href="javascript:void();" data-target="#edit" data-toggle="pill" class="nav-link active"><i class="icon-user"></i> <span class="hidden-xs">Profile</span></a>
                 </li>
                 <li class="nav-item">
-                    <a href="javascript:void();" data-target="#messages" data-toggle="pill" class="nav-link"><i class="icon-envelope-open"></i> <span class="hidden-xs">Messages</span></a>
+                    <a href="javascript:void();" data-target="#vehicle" data-toggle="pill" class="nav-link"><i class="icon-envelope-open"></i> <span class="hidden-xs">Vehicle</span></a>
                 </li>
             </ul>
             <div class="tab-content p-3">
@@ -194,7 +187,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="tab-pane" id="messages">
+                <div class="tab-pane" id="vehicle">
                     <div class="alert alert-info alert-dismissible" role="alert">
 				   <button type="button" class="close" data-dismiss="alert">&times;</button>
 				    <div class="alert-icon">
