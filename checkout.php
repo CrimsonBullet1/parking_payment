@@ -163,7 +163,8 @@
                       FROM RESERVATIONS 
                       JOIN CUSTOMERS USING(CUSTOMERID)
                       JOIN PARKING_LOTS USING(PARKINGID)
-                      WHERE CUSTOMERID = :customerid");
+                      WHERE CUSTOMERID = :customerid 
+                      ORDER BY RESERVATIONID ASC");
                         $stmt->bindValue(':customerid', $_SESSION['customerid']);
                         $stmt->execute();
                         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -190,7 +191,7 @@
                               <td><?php echo $row['CUSTOMER_NAME'] ?></td>
                               <td><?php echo $row['SLOTNUM'] ?></td>
                               <td><?php echo $row['RESERVEDATE'] ?></td>
-                              <td><?php echo $row['RESERVEDATE'] ?>DAYS</td>
+                              <td><?php echo $row['DURATION'] ?>DAYS</td>
                               <td>RM <?php echo $row['TOTALCOST'] ?></td>
                               <td><?php echo $row['STATUS'] ?></td>
                             </tr>
