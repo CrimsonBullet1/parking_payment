@@ -193,6 +193,19 @@ include('config.php');
               <?php
               // Get the selected lot from the query string
               $lot = $_GET['lot'];
+              $reservation_id = [];
+
+              var_dump($lot);
+              var_dump($reservation_id);
+
+              $stmt = $pdo->prepare("SELECT RESERVATIONID AS RESERVATIONID FROM RESERVATIONS");
+              $stmt->execute();
+              $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+              // Data from the database
+              foreach ($rows as $row) {
+                  $reservation_id[] = ['reservation_id' => $row['RESERVATIONID']];
+              }
               ?>
 
               <h3>Reserve Parking Lot <?php echo $lot; ?></h3>
@@ -208,7 +221,7 @@ include('config.php');
 
                   <div class="form-group">
                       <label for="date">Date:</label>
-                      <input type="date" class="form-control" id="reservation_date" name="reservation_date" required>
+                      <input type="date" class="form-control" id="reservation_date" name="reservation_date" value="<?php echo $lot ?>" required>
                   </div>
 
                   <div class="form-group">

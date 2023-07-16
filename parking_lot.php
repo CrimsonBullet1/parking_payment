@@ -245,7 +245,7 @@
               <hr>
                     <?php
 
-                      $stmt = $pdo->prepare("SELECT PARKINGID, SLOTNUM, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS LEFT JOIN RESERVATIONS USING(PARKINGID)");
+                      $stmt = $pdo->prepare("SELECT PARKINGID, SLOTNUM, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS LEFT JOIN RESERVATIONS USING(PARKINGID) ORDER BY PARKINGID");
                       $stmt->execute();
                       $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

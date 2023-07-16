@@ -3,7 +3,7 @@ session_start();
 include("../conn.php");
 print_r($_POST);
 
-if (isset($_POST["button"])) {
+if (isset($_POST["submit"])) {
     $parkingid = $_POST['parkingid'];
     $reservation_date = $_POST['reservation_date'];
     $duration = $_POST['duration'];
@@ -14,7 +14,7 @@ if (isset($_POST["button"])) {
               FROM PARKING_LOTS
               WHERE slotnum = :slotnum";
     $statement = oci_parse($dbconn, $query);
-    oci_bind_by_name($statement, ':slotnum', $slotnum); 
+    oci_bind_by_name($statement, ':slotnum', $slotnum);
     oci_execute($statement);
     $row = oci_fetch_assoc($statement);
 
@@ -24,23 +24,22 @@ if (isset($_POST["button"])) {
             </script>";
     } else {
         // Insert to Reservation
-        $query = "INSERT INTO RESERVATIONS (RESERVATIONID, PARKINGID, DURATION, TOTALCOST, RESERVATION_DATE) 
-                  VALUES (:reservationid, :parkingid, :duration, :totalcost, :reservation_date)";
+        $query = "INSERT INTO RESERVATIONS (PARKINGID, DURATION, TOTALCOST, RESERVATION_DATE) 
+                  VALUES (:parkingid, :duration, :totalcost, :reservation_date)";
 
         $statement = oci_parse($dbconn, $query);
 
         // Bind the parameter value
-        $reservationid = "generate or assign a value here"; // Replace with the logic to generate or assign a value
-        oci_bind_by_name($statement, ':reservationid', $reservationid);
         oci_bind_by_name($statement, ':parkingid', $parkingid);
         oci_bind_by_name($statement, ':duration', $duration);
         oci_bind_by_name($statement, ':totalcost', $totalcost);
         oci_bind_by_name($statement, ':reservation_date', $reservation_date);
 
-        header("Location: ../checkout.php");
-
         if (oci_execute($statement)) {
-            echo "Data inserted into RESERVATIONS table successfully.";
+            $reservation_id = oci_last_insert_id($dbconn); // Get the generated reservation ID
+            $_SESSION['reservation_id'] = $reservation_id; // Store it in the session for later use
+            header("Location: ../checkout.php");
+            exit(); // Add this line to stop executing further code after the redirect
         } else {
             $error = oci_error($statement);
             echo "Failed to insert data into RESERVATIONS table. Error: " . $error['message'];
@@ -50,6 +49,5 @@ if (isset($_POST["button"])) {
     echo "<script>
         alert('Please try again!');
         </script>";
-
 }
 ?>
