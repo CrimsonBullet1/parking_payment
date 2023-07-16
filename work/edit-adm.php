@@ -5,7 +5,9 @@ if(isset($_POST["save"])){
 	$id = $_POST['id'];
 	$name = $_POST['name'];
 
-	$stmt = $pdo->prepare("UPDATE STAFFS SET NAME = '" . $name . "' WHERE STAFFID = " . $id . "");
+	$stmt = $pdo->prepare("UPDATE STAFFS 
+	                      SET NAME = '" . $name . 
+						  "' WHERE STAFFID = " . $id . "");
 	$statement = oci_parse($dbconn, $query);
 
 	// Bind the parameter value

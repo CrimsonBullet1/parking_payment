@@ -1,8 +1,4 @@
 <?php 
-<<<<<<< HEAD
-=======
-
->>>>>>> 1d48e4f6eb1700fbfd215962f8bd8f5dba47f036
 include('config.php');
 //  'iqbal dapat tak';
 ?>
