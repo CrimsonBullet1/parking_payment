@@ -19,6 +19,7 @@
   <!-- loader-->
   <link href="assets/css/pace.min.css" rel="stylesheet"/>
   <script src="assets/js/pace.min.js"></script>
+  <script text="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
   <!--favicon-->
   <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
   <!-- Vector CSS -->
@@ -120,7 +121,7 @@
       <div class="modal-body">
         <!-- Form -->
         <div class="card-body">
-          <form id="editForm">
+          <form id="editForm" enctype="multipart/form-data">
             <div class="form-group">
               <?php
                 $stmt = $pdo->prepare("SELECT STAFFID FROM STAFFS");
@@ -128,7 +129,7 @@
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
               ?>
               <label for="id">ID</label>
-              <select name="id" id="editId" class="form-control form-control-rounded">
+              <select name="id" id="edit_id" class="form-control form-control-rounded">
                 <option value="" selected disabled hidden>Choose Staff ID</option>
                 <?php 
                   foreach($rows as $row) {
@@ -137,7 +138,9 @@
                 ?>
               </select>
             </div>
-            <div class="form-group" id="editName">
+            <div class="form-group" id="edit_name">
+              <label for="name">Name</label>
+              <input type="text" class="form-control form-control-rounded" name="name" id="editName" placeholder="Enter Your Name">
             </div>
             <div class="form-group">
               <button type="submit" class="btn btn-light btn-round px-5"><i class="fa fa-pencil"></i> Edit</button>
@@ -146,7 +149,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="edit_cls_button">Close</button>
       </div>
     </div>
   </div>
@@ -164,7 +167,7 @@
       <div class="modal-body">
         <!-- Form -->
         <div class="card-body">
-        <form id="editForm" enctype="multipart/form-data">
+        <form id="delForm" enctype="multipart/form-data">
             <div class="form-group">
               <?php
                 $stmt = $pdo->prepare("SELECT STAFFID FROM STAFFS");
@@ -172,7 +175,7 @@
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
               ?>
               <label for="id">ID</label>
-              <select name="id" id="editId" class="form-control form-control-rounded">
+              <select name="id" id="del_id" class="form-control form-control-rounded">
                 <option value="" selected disabled hidden>Choose Staff ID</option>
                 <?php 
                   foreach($rows as $row) {
@@ -183,7 +186,7 @@
             </div>
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" class="form-control form-control-rounded" name="name" id="editName" placeholder="Enter Your Name">
+              <input type="text" class="form-control form-control-rounded" name="name" id="delName" placeholder="Enter Your Name" disabled>
             </div>
             <div class="form-group">
               <button type="submit" class="btn btn-light btn-round px-5" style="background-color: #801919;"><i class="fa fa-trash"></i> Delete</button>
@@ -218,7 +221,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="table-responsive">
+						<div id="table" class="table-responsive">
 							<?php 
 								$stmt = $pdo->prepare("SELECT STAFFID, ROLE, NAME FROM STAFFS ORDER BY STAFFID");
                 $stmt->execute();
@@ -300,42 +303,85 @@
 <!-- AJAX forms -->
 <script>
   $(document).ready(function () {
+
+    // Edit Staff Data
     $("#editForm").submit(function (event) {
-      var formData = {
-        name: $("#editId").val(),
-        email: $("#editName").val()
-      };
-
+      var id = $("#edit_id").val();
+      var name = $("#editName").val();
       $.ajax({
-        type: "POST",
-        url: "staff_edit.w.php",
-        data: formData,
-        dataType: "json",
-        encode: true,
-      }).done(function (data) {
-        console.log(data);
+        method: 'POST',
+        url: 'ajax/staff_edit_ajax.php',
+        data: {id:id, name:name},
+        success: function(data) {
+          alert("Data updated!");
+        },
+        error: function(data) {
+          alert("Failed to update!");
+        }
       });
+    });
 
-      event.preventDefault();
+    //Delete Staff Data
+    $("#delForm").submit(function (event) {
+      var id = $("#del_id").val();
+      $.ajax({
+        method: 'POST',
+        url: 'ajax/staff_delete_ajax.php',
+        data: {id:id},
+        success: function(data) {
+          alert("Data deleted!");
+        },
+        error: function(data) {
+          alert("Failed to delete!");
+          console.log(data);
+        }
+      });
     });
   });
 </script>
 
-<!-- Form Trigger -->
+<!-- AJAX Form Trigger -->
 <script>
   $(document).ready(function() {
-    $('#editId').change(function() {
+    $('#edit_id').change(function() {
       var id = $(this).val();
-      console.log(id);
       $.ajax({
         method: 'POST',
-        url: 'staff_edit_ajax.php',
-        data: 'id=' + id
-      }).done(function(name)) {
-        console.log(name);
-        name = JSON.parse(name);
-      }
+        url: 'ajax/dropdown_ajax.php',
+        data: {id:id},
+        success: function(data) {
+          $("#editName").val(data);
+        },
+        error: function(data) {
+          console.log("Error in parsing data!");
+        }
+      })
+    });
+
+    $('#del_id').change(function() {
+      var id = $(this).val();
+      $.ajax({
+        method: 'POST',
+        url: 'ajax/dropdown_ajax.php',
+        data: {id:id},
+        success: function(data) {
+          $("#delName").val(data);
+        },
+        error: function(data) {
+          console.log("Error in parsing data!");
+        }
+      })
     })
+  });
+</script>
+
+<!-- Clear Modal Form on Close -->
+<script>
+  $(document).ready(function() {
+    $('[data-dismiss=modal]').on('click', function () {
+      $('#editForm').trigger('reset');
+      $('#delForm').trigger('reset');
+    });
   });
 </script>
 
