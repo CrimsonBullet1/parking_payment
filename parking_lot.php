@@ -1,6 +1,7 @@
 <?php
   include 'config.php';
 
+
   if (!isset($_SESSION['customerid'])) {
    header("Location: login.php");
    exit();

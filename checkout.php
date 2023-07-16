@@ -175,7 +175,7 @@
                           <tr>
                             <th>Reservation ID</th>
                             <th>Customer name</th>
-                            <th>Parking Slot No.</th>
+                            <th>Parking Slot No</th>
                             <th>Date Reservations</th>
                             <th>Duration</th>
                             <th>Total</th>
