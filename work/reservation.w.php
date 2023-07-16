@@ -1,7 +1,6 @@
 <?php
 session_start();
 include("../conn.php");
-print_r($_POST);
 
 if (isset($_POST["submit"])) {
     $parkingid = $_POST['parkingid'];
