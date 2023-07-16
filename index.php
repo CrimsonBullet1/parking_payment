@@ -1,5 +1,4 @@
 <?php
-   session_start();
    include('config.php');
    if (!isset($_SESSION['customerid'])) {
     header("Location: login.php");
