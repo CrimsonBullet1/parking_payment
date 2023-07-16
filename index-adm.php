@@ -103,7 +103,7 @@
           </li>
           <li class="dropdown-divider"></li>
           <li class="dropdown-item">
-            <a href="profile.php">
+            <a href="profile-adm.php">
               <i class="fa fa-user"></i> Profile
             </a>
           </li>
