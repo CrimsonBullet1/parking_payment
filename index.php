@@ -119,48 +119,24 @@
           <div class="card">
             <div class="card-header">Reservation Request</div>
             <div class="table-responsive">
-              <?php
-                $stmt = $pdo->prepare("SELECT SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS, PARKINGID FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN PARKING_LOTS USING(PARKINGID) WHERE CUSTOMERID = " . $_SESSION['customerid'] . "");
-                $stmt->execute();
-                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-              ?>
-
-              <table class="table align-items-center table-flush table-borderless" style="text-align: center;">
+              <table class="table align-items-center table-flush table-borderless">
                 <thead>
                   <tr>
+                    <th>No.</th>
                     <th>Parking Slot No.</th>
-                    <th>Duration</th>
-                    <th>Total</th>
+                    <th>Date Ordered</th>
                     <th>Date Reservations</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <?php foreach ($rows as $row) : ?>
-                  <?php if ($row['PARKINGID'] !== null) : ?>
                   <tr>
-                    <td><?php echo $row['SLOTNUM'] ?></td>
-                    <td><?php echo $row['DURATION'] ?> days</td>
-                    <td>RM <?php echo $row['TOTALCOST'] ?></td>
-                    <td><?php echo $row['RESERVEDATE'] ?></td>
-                    <?php 
-                      if($row['STATUS'] == "PENDING") {
-                        echo "<td style='color: #ecf545;'>PENDING</td>";
-                      }
-                      else if($row['STATUS'] == "RESERVED") {
-                        echo "<td style='color: #d90000'>RESERVED</td>";
-                      }
-                    ?>
+                    <td>1</td>
+                    <td>A101</td>
+                    <td>03 Aug 2023</td>
+                    <td>20 Aug 2023</td>
+                    <td>PENDING</td>
                   </tr>
-                  <?php endif; ?>
-                  <?php endforeach; ?>
-
-                  <?php if (empty($row['PARKINGID'])) : ?>
-                  <tr>
-                    <td colspan="4">You have not make any reservation parking.</td>
-                    <td colspan="1"><button type="submit" class="btn btn-light btn-round px-5" style="background-color: #1ad622;" onclick="window.location.href = 'reservation.php';"><i class="fa fa-check"></i> Make A Reservation</button></td>
-                  </tr>
-                  <?php endif; ?>
                 </tbody>
               </table>
             </div>
@@ -186,7 +162,9 @@
 	<!--Start footer-->
 	<footer class="footer">
     <div class="container">
-      <div class="text-center"></div>
+      <div class="text-center">
+        Copyright © 2018 Dashtreme Admin
+      </div>
     </div>
   </footer>
 	<!--End footer-->
