@@ -248,20 +248,23 @@
                       }
                       
                       // Get the current date
-                      $currentDate = date('Y-m-d');
+                      $currentDate = date('Y-M-D');
+
 
                       // Display the parking lots
-                      foreach ($parkingLots as $slotnum) {
-                        $reserved = ($lot['date'] == $currentDate) ? 'reserved disabled' : 'available';
+                      foreach ($parkingLots as $lot) {
+                        $reserved = ($lot['date'] == $currentDate) ? 'reserved' : 'available';
                         $status = ($lot['date'] == $currentDate) ? 'Reserved' : 'Available';
-                        echo '<div class="parking-lot ' . $reserved . '" onclick="reserveParkingLot(' . $lot['id'] . ')">';
+                        //Click available or Reserved
+                        $clickable = ($reserved == 'available') ? 'onclick="reserveParkingLot(' . $lot['id'] . ')"' : '';
+                        
+                        echo '<div class="parking-lot ' . $reserved . '" ' . $clickable . '>';
                         echo '<span class="lot-number">' . $lot['id'] . '</span>';
                         echo '<span class="lot-status">' . $status . '</span>';
                         echo '</div>';
-                      }
-                      
-                      
+                      }                      
                     ?>
+
                     </div>
                   </div>
                 </li>
