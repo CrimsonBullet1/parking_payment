@@ -64,6 +64,12 @@
           <i class="zmdi zmdi-account-circle"></i> <span>Staff</span>
         </a>
       </li>
+
+      <li>
+        <a href="staff_reservation_app.php">
+          <i class="zmdi zmdi-format-list-bulleted"></i> <span>Reservations</span>
+        </a>
+      </li>
     </ul>
   </div>
 <!--End sidebar-wrapper-->
@@ -207,7 +213,11 @@
             <div class="card-header">Reservations</div>
             <div class="table-responsive">
               <?php 
-                $stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID)");
+                $stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE 
+                                       FROM RESERVATIONS 
+                                       JOIN CUSTOMERS USING(CUSTOMERID) 
+                                       JOIN STAFFS USING(STAFFID) 
+                                       ORDER BY RESERVATIONID");
                 $stmt->execute();
               ?>
               <table class="table table-striped align-items-center table-flush table-borderless" style="text-align: center;">

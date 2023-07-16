@@ -278,9 +278,10 @@
                   </div>
 
                   <input type="hidden" name="lot" value="<?php echo $slotnum; ?>">
-
-                  <button type="submit" class="btn btn-light px-5"><i class="zmdi zmdi-dot-circle"></i> Submit </button>
-                </form>
+                  
+                  <div class="submit">
+                    <a href="checkout_page.php"><button type="button" class="btn btn-light px-5">SUBMIT</button></a>
+                  </div>
 
                 </div>
               </div>
