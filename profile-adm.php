@@ -1,11 +1,9 @@
 <?php
-   include('data-adm.php');
-    if (!isset($_SESSION['staffid'])) {
-       header("Location: login.php");
+   include('config.php');
+   if (!isset($_SESSION['ID'])) {
+    header("Location: login.php");
     exit();
-}
-$data = getDataAdm();
-
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,6 +17,7 @@ $data = getDataAdm();
   <!-- loader-->
   <link href="assets/css/pace.min.css" rel="stylesheet"/>
   <script src="assets/js/pace.min.js"></script>
+  <script text="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
   <!--favicon-->
   <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
   <!-- Vector CSS -->
@@ -106,125 +105,56 @@ $data = getDataAdm();
 	
   <div class="content-wrapper">
     <div class="container-fluid">
-        <div class="col-lg-8">
-           <div class="card">
-            <div class="card-body">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
             <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
-            <li class="nav-item">
-                    <a href="javascript:void();" data-target="#edit" data-toggle="pill" class="nav-link active"><i class="icon-user"></i> <span class="hidden-xs">Profile</span></a>
-                </li>
-                <!-- <li class="nav-item">
-                    <a href="javascript:void();" data-target="#messages" data-toggle="pill" class="nav-link"><i class="icon-envelope-open"></i> <span class="hidden-xs">Messages</span></a>
-                </li> -->
+              <li class="nav-item">
+                <a href="javascript:void();" data-target="#edit" data-toggle="pill" class="nav-link active"><i class="icon-user"></i> <span class="hidden-xs">Profile</span></a>
+              </li>
             </ul>
             <div class="tab-content p-3">
-            <div class="tab-pane active" id="edit">
-                    <form action="work/edit-adm.php" method="post">
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label form-control-label">Full Name</label>
-                            <div class="col-lg-9">
-                                <input class="form-control" name="name" type="text" value="<?php echo $data['name']; ?>">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label form-control-label">Staff ID</label>
-                            <div class="col-lg-9">
-                            <?php if($data['role'] == 1): ?>
-                              <input class="form-control" name="staffid" type="number" value="<?php echo $data['staffid']; ?>"> 
-                              <?php elseif($data['role'] == 2): ?>
-                                <input class="form-control"  value="<?php echo $data['staffid']; ?> " disabled>
-                                <?php endif; ?>
-                            </div>
-                        </div>             
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label form-control-label">Password</label>
-                            <div class="col-lg-9">
-                                <input class="form-control" name="password" type="password"  value="<?php echo $data['password']; ?>">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <!-- <label class="col-lg-3 col-form-label form-control-label">Confirm password</label>
-                            <div class="col-lg-9">
-                                <input class="form-control" type="password"  value="<?php $_SESSION['password']; ?>">
-                            </div> -->
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-3 col-form-label form-control-label"></label>
-                            <div class="col-lg-9">
-                                <input type="reset" name="reset"class="btn btn-secondary" value="Cancel">
-                                <input type="submit" name="save" class="btn btn-primary" value="Save" onclick="return confirm('Are you sure you want to save?');">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="tab-pane" id="messages">
-                    <div class="alert alert-info alert-dismissible" role="alert">
-				   <button type="button" class="close" data-dismiss="alert">&times;</button>
-				    <div class="alert-icon">
-					 <i class="icon-info"></i>
-				    </div>
-				    <div class="alert-message">
-				      <span><strong>Info!</strong> Lorem Ipsum is simply dummy text.</span>
-				    </div>
-               </div>
-                  <div class="table-responsive">
-                    <table class="table table-hover table-striped">
-                        <tbody>                                    
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">3 hrs ago</span> Here is your a link to the latest summary report from the..
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">Yesterday</span> There has been a request on your account since that was..
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/10</span> Porttitor vitae ultrices quis, dapibus id dolor. Morbi venenatis lacinia rhoncus. 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/4</span> Vestibulum tincidunt ullamcorper eros eget luctus. 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                   <span class="float-right font-weight-bold">9/4</span> Maxamillion ais the fix for tibulum tincidunt ullamcorper eros. 
-                                </td>
-                            </tr>
-                        </tbody> 
-                    </table>
+              <div class="tab-pane active" id="edit">
+                <form action="work/edit-adm.php" method="post">
+                  <div class="form-group row">
+                    <label class="col-lg-3 col-form-label form-control-label">Name</label>
+                    <div class="col-lg-9">
+                      <input class="form-control" name="name" type="text" value="<?php echo $_SESSION['NAME']; ?>">
+                    </div>
                   </div>
-                </div>
+                  <div class="form-group row">
+                    <label class="col-lg-3 col-form-label form-control-label">Staff ID</label>
+                    <div class="col-lg-9">
+                      <?php if($_SESSION['ROLE'] == 1): ?>
+                      <input class="form-control" name="id" type="number" value="<?php echo $_SESSION['ID']; ?>" disabled> 
+                      <?php elseif($_SESSION['ROLE'] == 2): ?>
+                        <input class="form-control"  value="<?php echo $_SESSION['ID']; ?> " disabled>
+                        <?php endif; ?>
+                    </div>
+                  </div>             
+                  <div class="form-group row">
+                    <label class="col-lg-3 col-form-label form-control-label"></label>
+                    <div class="col-lg-9">
+                      <input type="submit" name="save" class="btn btn-primary" value="Save" onclick="return confirm('Are you sure you want to save?');">
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>    
+    </div>
+	
+    <!--Start footer-->
+    <footer class="footer">
+      <div class="container">
+        <div class="text-center">
+          Copyright © 2018 Dashtreme Admin
         </div>
       </div>
-      </div>
-        
-    </div>
-
-	<!--start overlay-->
-		  <div class="overlay toggle-menu"></div>
-		<!--end overlay-->
-	
-    </div>
-    <!-- End container-fluid-->
-   </div><!--End content-wrapper-->
-   <!--Start Back To Top Button-->
-    <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
-    <!--End Back To Top Button-->
-	
-	<!--Start footer-->
-	<footer class="footer">
-      <div class="container">
-      
-      </div>
     </footer>
-	<!--End footer-->
-   
+    <!--End footer--> 
   </div><!--End wrapper-->
 
 
