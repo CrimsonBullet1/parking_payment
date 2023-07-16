@@ -1,5 +1,11 @@
-<?php 
+<?php
   include 'config.php';
+
+  if (!isset($_SESSION['customerid'])) {
+   header("Location: login.php");
+   exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -238,7 +244,7 @@
               <hr>
                     <?php
 
-                      $stmt = $pdo->prepare("SELECT PARKINGID, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS LEFT JOIN RESERVATIONS USING(PARKINGID)");
+                      $stmt = $pdo->prepare("SELECT PARKINGID, SLOTNUM, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS LEFT JOIN RESERVATIONS USING(PARKINGID)");
                       $stmt->execute();
                       $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -255,14 +261,13 @@
                       foreach ($parkingLots as $lot) {
                         $reserved = ($lot['date'] == $currentDate) ? 'reserved' : 'available';
                         $status = ($lot['date'] == $currentDate) ? 'Reserved' : 'Available';
-                        //Click available or Reserved
-                        $clickable = ($reserved == 'available') ? 'onclick="reserveParkingLot(' . $lot['id'] . ')"' : '';
-                        
+                        $clickable = ($reserved == 'available') ? 'onclick="reserveParkingLot(' . $lot['id'] . ')"' : '';            
+
                         echo '<div class="parking-lot ' . $reserved . '" ' . $clickable . '>';
                         echo '<span class="lot-number">' . $lot['id'] . '</span>';
                         echo '<span class="lot-status">' . $status . '</span>';
                         echo '</div>';
-                      }                      
+                      }                                                            
                     ?>
 
                     </div>
@@ -274,12 +279,10 @@
             <script>
                 function reserveParkingLot(lotId) {
                     window.location.href = 'reservation.php?lot=' + lotId;
-                }
-                
+                }          
             </script>
         
         <!--End Row-->
-
 
 
 <!--start overlay-->
@@ -333,7 +336,7 @@
         <li id="theme10"></li>
         <li id="theme11"></li>
         <li id="theme12"></li>
-		<li id="theme13"></li>
+		    <li id="theme13"></li>
         <li id="theme14"></li>
         <li id="theme15"></li>
       </ul>

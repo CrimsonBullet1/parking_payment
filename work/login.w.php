@@ -1,6 +1,5 @@
 <?php
-session_start();
-include("../conn.php");
+include('../config.php');
 
 if(isset($_POST["login"])){
 
@@ -8,24 +7,11 @@ if(isset($_POST["login"])){
     $password = $_POST["password"];
 
     // Prepare the SELECT statement
-    $query = "SELECT *
-              FROM CUSTOMERS
-              WHERE email = :email
-              AND password = :password";
-    $statement = oci_parse($dbconn, $query);
+    $stmt = $pdo->prepare("SELECT * FROM CUSTOMERS WHERE EMAIL = '" . $email . "' AND password = '" . $password . "'");
+		$stmt->execute();
+    $row = $stmt->fetch();
 
-    // Bind the parameter value
-    oci_bind_by_name($statement, ':email', $email);
-    oci_bind_by_name($statement, ':password', $password);
-
-    // Execute the statement
-    $result = oci_execute($statement);
-    if (!$result) {
-        $error = oci_error($statement);
-        die("Statement execution failed: " . $error['message']);
-    }
-
-    if ($row = oci_fetch_assoc($statement)) {
+    if ($row) {
         // Login successful
         $_SESSION['customerid'] = $row['CUSTOMERID'];
         $_SESSION['firstname'] = $row['FIRSTNAME'];
@@ -33,7 +19,7 @@ if(isset($_POST["login"])){
         $_SESSION['phonenum'] = $row['PHONENUM'];
         $_SESSION['email'] = $row['EMAIL'];
         $_SESSION['password'] = $row['PASSWORD'];
-       header("Location: ..\index.php");
+       header("Location: ../index.php");
     } 
     else {
         // Login failed

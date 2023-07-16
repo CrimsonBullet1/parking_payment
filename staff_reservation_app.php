@@ -247,7 +247,7 @@
 								</div>
 							</div>
 						</div>
-						<div id="table" class="table-responsive">
+						<div class="table-responsive">
 							<?php 
 								$stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, SLOTNUM, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, FLAG, STATUS_PAYMENT FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) LEFT JOIN STAFFS USING(STAFFID) JOIN PARKING_LOTS USING(PARKINGID) ORDER BY RESERVATIONID");
                 $stmt->execute();
