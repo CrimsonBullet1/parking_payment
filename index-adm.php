@@ -103,7 +103,7 @@
           </li>
           <li class="dropdown-divider"></li>
           <li class="dropdown-item">
-            <a href="profile-adm.php">
+            <a href="profile.php">
               <i class="fa fa-user"></i> Profile
             </a>
           </li>
@@ -248,7 +248,7 @@
             <div class="card-header">Reservations</div>
             <div class="table-responsive">
               <?php 
-                $stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID) ORDER BY RESERVATIONID");
+                $stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, SLOTNUM, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS_PAYMENT FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID) JOIN PARKING_LOTS USING(PARKINGID) ORDER BY RESERVATIONID");
                 $stmt->execute();
               ?>
               <table class="table table-striped align-items-center table-flush table-borderless" style="text-align: center;">
