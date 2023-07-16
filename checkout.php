@@ -11,7 +11,7 @@
   $statement = $pdo->prepare($query);
 
   // Data from the database
-  $stmt = $pdo->prepare("SELECT PARKINGID, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS LEFT JOIN RESERVATIONS USING(PARKINGID)");
+  $stmt = $pdo->prepare("SELECT PARKINGID, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS JOIN RESERVATIONS USING(PARKINGID)");
   $stmt->execute();
   $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
   foreach($rows as $row) 
@@ -159,7 +159,7 @@
                 </div>
                 <div class="table-responsive">
                     <?php
-                      $stmt = $pdo->prepare("SELECT FIRSTNAME || ' ' || LASTNAME AS CUSTOMER_NAME,RESERVATIONID, SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS, PARKINGID 
+                      $stmt = $pdo->prepare("SELECT FIRSTNAME || ' ' || LASTNAME AS CUSTOMER_NAME,RESERVATIONID, SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS_PAYMENT, PARKINGID 
                       FROM RESERVATIONS 
                       JOIN CUSTOMERS USING(CUSTOMERID)
                       JOIN PARKING_LOTS USING(PARKINGID)
@@ -175,7 +175,7 @@
                           <tr>
                             <th>Reservation ID</th>
                             <th>Customer name</th>
-                            <th>Parking Slot No.</th>
+                            <th>Parking Slot No</th>
                             <th>Date Reservations</th>
                             <th>Duration</th>
                             <th>Total</th>
@@ -191,9 +191,18 @@
                               <td><?php echo $row['CUSTOMER_NAME'] ?></td>
                               <td><?php echo $row['SLOTNUM'] ?></td>
                               <td><?php echo $row['RESERVEDATE'] ?></td>
-                              <td><?php echo $row['DURATION'] ?>DAYS</td>
+                              <td><?php echo $row['DURATION'] ?> DAYS</td>
                               <td>RM <?php echo $row['TOTALCOST'] ?></td>
-                              <td><?php echo $row['STATUS'] ?></td>
+                              <?php
+                                if($row['STATUS_PAYMENT'] == 1)
+                                {
+                                  ECHO"<td>SUCCESS</td>";
+                                } 
+                                elseif($row['STATUS_PAYMENT'] == 0 OR ($row['STATUS_PAYMENT'] == NULL))  
+                                {
+                                  ECHO"<td>PENDING</td>";
+                                } 
+                              ?>
                             </tr>
 
                             <?php endif; ?>
@@ -217,14 +226,11 @@
    <div class="panel panel-default">
       <div class="panel-heading">
         <div class="row">
-          <div class="col-md-6">Product List</div>
           <div class="col-md-6" align="right">
-            <button type="button" name="add_to_cart" id="add_to_cart" class="btn btn-success btn-xs">Add to Cart</button>
+            <button type="button" name="add_to_cart" id="add_to_cart" class="btn btn-success btn-xs">GO TO PAYMENT</button>
           </div>
         </div>
-      </div>
-      <div class="panel-body" id="display_item"></div>
-      </div>
+
     </div> 
            
 
