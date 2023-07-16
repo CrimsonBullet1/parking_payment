@@ -1,11 +1,11 @@
 <?php
-   session_start();
-   include('config.php');
-   if (!isset($_SESSION['customerid'])) {
+  include('config.php');
+  if (!isset($_SESSION['customerid'])) {
     header("Location: login.php");
     exit();
-}
+  }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +34,6 @@
   <link href="assets/css/sidebar-menu.css" rel="stylesheet"/>
   <!-- Custom Style-->
   <link href="assets/css/app-style.css" rel="stylesheet"/>
-  
 </head>
 
 <body class="bg-theme bg-theme1">
@@ -46,7 +45,7 @@
     <div class="brand-logo">
       <a href="index.php">
         <img src="assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
-        <h5 class="logo-text">Car Park</h5>
+        <h5 class="logo-text">Dash Carpark</h5>
       </a>
     </div>
     <ul class="sidebar-menu do-nicescrol">
@@ -118,51 +117,50 @@
       <div class="row">
         <div class="col-12 col-lg-12">
           <div class="card">
-            <div class="card-header">Parking Reservation Request</div>
+            <div class="card-header">Reservation Request</div>
             <div class="table-responsive">
-            <?php
-$stmt = $pdo->prepare("SELECT SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS, PARKINGID 
-                       FROM RESERVATIONS 
-                       JOIN CUSTOMERS USING(CUSTOMERID)
-                       JOIN PARKING_LOTS USING(PARKINGID)
-                       WHERE CUSTOMERID = :customerid");
-$stmt->bindValue(':customerid', $_SESSION['customerid']);
-$stmt->execute();
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+              <?php
+                $stmt = $pdo->prepare("SELECT SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS, PARKINGID FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN PARKING_LOTS USING(PARKINGID) WHERE CUSTOMERID = " . $_SESSION['customerid'] . "");
+                $stmt->execute();
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+              ?>
 
-<table class="table align-items-center table-flush table-borderless">
-  <thead>
-    <tr>
-      <th>Parking Slot No.</th>
-      <th>Duration</th>
-      <th>Total</th>
-      <th>Date Reservations</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php foreach ($rows as $row) : ?>
-    <?php if ($row['PARKINGID'] !== null) : ?>
-      <tr>
-        <td><?php echo $row['SLOTNUM'] ?></td>
-        <td><?php echo $row['DURATION'] ?> days</td>
-        <td>RM <?php echo $row['TOTALCOST'] ?></td>
-        <td><?php echo $row['RESERVEDATE'] ?></td>
-        <td><?php echo $row['STATUS'] ?></td>
-      </tr>
-    <?php endif; ?>
-  <?php endforeach; ?>
+              <table class="table align-items-center table-flush table-borderless" style="text-align: center;">
+                <thead>
+                  <tr>
+                    <th>Parking Slot No.</th>
+                    <th>Duration</th>
+                    <th>Total</th>
+                    <th>Date Reservations</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($rows as $row) : ?>
+                  <?php if ($row['PARKINGID'] !== null) : ?>
+                  <tr>
+                    <td><?php echo $row['SLOTNUM'] ?></td>
+                    <td><?php echo $row['DURATION'] ?> days</td>
+                    <td>RM <?php echo $row['TOTALCOST'] ?></td>
+                    <td><?php echo $row['RESERVEDATE'] ?></td>
+                    <?php 
+                      if($row['STATUS'] == "PENDING") {
+                        echo "<td style='color: #ecf545;'>PENDING</td>";
+                      }
+                      else if($row['STATUS'] == "RESERVED") {
+                        echo "<td style='color: #d90000'>RESERVED</td>";
+                      }
+                    ?>
+                  </tr>
+                  <?php endif; ?>
+                  <?php endforeach; ?>
 
-  <?php if (empty($row['PARKINGID'])) : ?>
-    <tr>
-      <td colspan="4">You have not make any reservation parking.</td>
-      <td colspan="1"><button type="submit" class="btn btn-light btn-round px-5" style="background-color: #1ad622;" onclick="window.location.href = 'reservation.php';"><i class="fa fa-check"></i> Make A Reservation</button></td>
-    </tr>
-  <?php endif; ?>
-</tbody>
-</table>
-
+                  <?php if (empty($row['PARKINGID'])) : ?>
+                  <tr>
+                    <td colspan="4">You have not make any reservation parking.</td>
+                    <td colspan="1"><button type="submit" class="btn btn-light btn-round px-5" style="background-color: #1ad622;" onclick="window.location.href = 'reservation.php';"><i class="fa fa-check"></i> Make A Reservation</button></td>
+                  </tr>
+                  <?php endif; ?>
                 </tbody>
               </table>
             </div>
@@ -174,7 +172,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <!--End Dashboard Content-->
 	  
       <!--start overlay-->
-        <div class="overlay toggle-menu"></div>
+      <div class="overlay toggle-menu"></div>
       <!--end overlay-->
     </div>
     <!-- End container-fluid-->
@@ -188,8 +186,7 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	<!--Start footer-->
 	<footer class="footer">
     <div class="container">
-      <div class="text-center">
-      </div>
+      <div class="text-center"></div>
     </div>
   </footer>
 	<!--End footer-->
