@@ -280,7 +280,7 @@
                   <input type="hidden" name="lot" value="<?php echo $slotnum; ?>">
                   
                   <div class="submit">
-                    <a href="checkout_page.php"><button type="button" class="btn btn-light px-5">SUBMIT</button></a>
+                    <a href="checkout.php"><button type="button" class="btn btn-light px-5">SUBMIT</button></a>
                   </div>
 
                 </div>

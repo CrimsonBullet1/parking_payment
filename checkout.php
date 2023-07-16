@@ -1,6 +1,5 @@
 <?php
   include ("config.php");
-   session_start();
 // PRINT_R($_SESSION);
 
   //  if (!isset($_SESSION['user'])) {
@@ -17,7 +16,7 @@
   $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
   foreach($rows as $row) 
   {
-      $parkingLots[] = ['id' => $row['PARKINGID'], 'date' => $row['RESERVATION_DATE']];
+    $parkingLots[] = ['id' => $row['PARKINGID'], 'date' => $row['RESERVATION_DATE']];
   }
   // Get the current date
   $currentDate = date('Y-m-d');
@@ -164,7 +163,7 @@
                       FROM RESERVATIONS 
                       JOIN CUSTOMERS USING(CUSTOMERID)
                       JOIN PARKING_LOTS USING(PARKINGID)
-                      WHERE CUSTOMERID = 1;");
+                      WHERE CUSTOMERID = :customerid");
                         $stmt->bindValue(':customerid', $_SESSION['customerid']);
                         $stmt->execute();
                         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
