@@ -1,9 +1,9 @@
 <?php
   include ("config.php");
-  //  if (!isset($_SESSION['user'])) {
-  //   header("Location: login.php");
-  //   exit();
-  //  }
+  if (!isset($_SESSION['ID'])) {
+    header("Location: login.php");
+    exit();
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -218,9 +218,21 @@
 			  						<i class="icon-options"></i>
 			 						</a>
 									<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(14px, 19px, 0px);">
+                    <?php 
+                      if($_SESSION['ROLE'] == 1) {
+                    ?>
 										<a class="dropdown-item" href="staff_register.php">Register New Staff</a>
+                    <?php 
+                      }
+                    ?>
 										<a type="button" class="dropdown-item" data-toggle="modal" data-target="#editModal">Edit Staff</a>
+                    <?php 
+                      if($_SESSION['ROLE'] == 1) {
+                    ?>
 										<a type="button" class="dropdown-item" data-toggle="modal" data-target="#delModal">Delete Staff</a>
+                    <?php 
+                      }
+                    ?>
 									</div>
 								</div>
 							</div>
