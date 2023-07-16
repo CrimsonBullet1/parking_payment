@@ -1,4 +1,5 @@
 <?php 
+
 include('config.php');
 ?>
 <!DOCTYPE html>
@@ -190,14 +191,13 @@ include('config.php');
               <hr>
                 <div class="reservation-container">
                 <?php
-
                 // Get the selected lot from the query string
                 $lot = $_GET['lot'];
                 ?>
 
                 <h3>Reserve Parking Lot <?php echo $lot; ?></h3>
 
-                <form action="work/checkout.php" method="post">
+                <form action="work/reservation.w.php" method="post">
                   <div class="form-group">
                     <!-- <label for="parkingid">Parking ID:</label> -->
                     <input type="hidden" class="form-control" id="parkingid" name="parkingid" value="<?php echo $lot ?>"required>
@@ -206,12 +206,12 @@ include('config.php');
                     <!-- <label for="reservationid">Reservation ID:</label> -->
                     <input type="hidden" class="form-control" id="reservationid" name="reservationid" required>
                   </div>
-                  <!-- Duration -->
+                  <!-- Form Duration -->
                   <div class="form-group">
                     <label for="duration">Duration:</label>
                     <input type="number" class="form-control" id="duration" placeholder="Days" name="duration" required>
                   </div>
-                  <!-- Date -->
+                  <!-- Form Date -->
                   <div class="form-group">
                     <label for="date">Date:</label>
                     <input type="date" class="form-control" id="reservation_date" name="reservation_date" required>
@@ -219,7 +219,7 @@ include('config.php');
 
                   <div class="form-group">
                                         
-                    <?php 
+                  <?php 
                    $stmt = $pdo->prepare("SELECT DURATION
                                          FROM RESERVATIONS
                                          JOIN CUSTOMERS 
@@ -242,7 +242,7 @@ include('config.php');
                   <tr>
                     <td>
                     
-                    <!-- Calculate duration -->
+                    <!-- Form Totalcost Calculate Duration -->
                     <?php               
                     $duration = $row['DURATION'];
                     $totalcost = $duration * 50;
@@ -259,7 +259,7 @@ include('config.php');
                   <br>
                   <!-- Submit Button -->
                   <div class="submit">
-                    <a href="checkout.php"><button type="button" class="btn btn-light px-5">SUBMIT</button></a>
+                    <a href="checkout.php"><button type="button" class="btn btn-light px-5">ADD TO CART</button></a>
                   </div>
                 </div>
               </div>
