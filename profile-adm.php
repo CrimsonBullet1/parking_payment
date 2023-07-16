@@ -116,19 +116,18 @@
             <div class="tab-content p-3">
               <div class="tab-pane active" id="edit">
                 <form action="work/edit-adm.php" method="post">
-                  <input class="form-control" name="id" type="number" value="<?php echo $_SESSION['ID']; ?>" hidden> 
                   <div class="form-group row">
                     <label class="col-lg-3 col-form-label form-control-label">Name</label>
                     <div class="col-lg-9">
-                      <input class="form-control" name="name" type="text" value="<?php echo $_SESSION['NAME']; ?>">
-                    </div>
-                  </div>           
-                  <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label"></label>
-                    <div class="col-lg-9">
-                      <input type="submit" name="save" class="btn btn-primary" value="Save" onclick="return confirm('Are you sure you want to save?');">
+                      <input class="form-control" name="name" type="text" value="<?php echo $_SESSION['NAME']; ?>" disabled>
                     </div>
                   </div>
+                  <div class="form-group row">
+                    <label class="col-lg-3 col-form-label form-control-label">Staff ID</label>
+                    <div class="col-lg-9">
+                      <input class="form-control" name="id" type="number" value="<?php echo $_SESSION['ID']; ?>" disabled> 
+                    </div>
+                  </div>             
                 </form>
               </div>
             </div>
