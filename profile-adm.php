@@ -116,22 +116,13 @@
             <div class="tab-content p-3">
               <div class="tab-pane active" id="edit">
                 <form action="work/edit-adm.php" method="post">
+                  <input class="form-control" name="id" type="number" value="<?php echo $_SESSION['ID']; ?>" hidden> 
                   <div class="form-group row">
                     <label class="col-lg-3 col-form-label form-control-label">Name</label>
                     <div class="col-lg-9">
                       <input class="form-control" name="name" type="text" value="<?php echo $_SESSION['NAME']; ?>">
                     </div>
-                  </div>
-                  <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">Staff ID</label>
-                    <div class="col-lg-9">
-                      <?php if($_SESSION['ROLE'] == 1): ?>
-                      <input class="form-control" name="id" type="number" value="<?php echo $_SESSION['ID']; ?>" disabled> 
-                      <?php elseif($_SESSION['ROLE'] == 2): ?>
-                        <input class="form-control"  value="<?php echo $_SESSION['ID']; ?> " disabled>
-                        <?php endif; ?>
-                    </div>
-                  </div>             
+                  </div>           
                   <div class="form-group row">
                     <label class="col-lg-3 col-form-label form-control-label"></label>
                     <div class="col-lg-9">

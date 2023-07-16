@@ -132,7 +132,7 @@
 
                   // Data from the database
                   foreach($rows as $row) {
-                      $parkingLots[] = ['slotnum' => $row['SLOTNUM'], 'date' => $row['RESERVATION_DATE']];
+                      $parkingLots[] = ['id' => $row['PARKINGID'], 'date' => $row['RESERVATION_DATE']];
                   }
                   
                   // Get the current date
@@ -142,10 +142,10 @@
                   foreach ($parkingLots as $lot) {
                     $reserved = ($lot['date'] == $currentDate) ? 'reserved' : 'available';
                     $status = ($lot['date'] == $currentDate) ? 'Reserved' : 'Available';
-                    $clickable = ($reserved == 'available') ? 'onclick="reserveParkingLot(' . $lot['slotnum'] . ')"' : '';            
+                    $clickable = ($reserved == 'available') ? 'onclick="reserveParkingLot(' . $lot['id'] . ')"' : '';            
 
                     echo '<div class="parking-lot ' . $reserved . '" ' . $clickable . '>';
-                    echo '<span class="lot-number">' . $lot['slotnum'] . '</span>';
+                    echo '<span class="lot-number">' . $lot['id'] . '</span>';
                     echo '<span class="lot-status">' . $status . '</span>';
                     echo '</div>';
                   }

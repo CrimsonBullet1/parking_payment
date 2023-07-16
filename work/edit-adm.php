@@ -6,27 +6,17 @@ if(isset($_POST["save"])){
 	$name = $_POST['name'];
 
 	$stmt = $pdo->prepare("UPDATE STAFFS SET NAME = '" . $name . "' WHERE STAFFID = " . $id . "");
-	$statement = oci_parse($dbconn, $query);
+	$stmt->execute();
 
-	// Bind the parameter value
-	oci_bind_by_name($statement, ':name', $name);
-	oci_bind_by_name($statement, ':staffid', $staffid);
-	oci_bind_by_name($statement, ':password', $password);
-
-	// Execute the statement
-	$result = oci_execute($statement);
-	if (!$result) {
-			$error = oci_error($statement);
-			die("Statement execution failed: " . $error['message']);
+	// Fetch data
+	$row = $stmt->fetch();
+	if (!$row) {
+			die("Statement failed to pass!");
 	} else {
-			$_SESSION['name'] = $name;
-			$_SESSION['staffid'] = $staffid;
-			$_SESSION['password'] = $password; 
-
-			echo "<script>alert('Update successful!'); setTimeout(function(){ window.location.href = '../profile-adm.php'; }, );</script>";
-			// exit();
+		$_SESSION['NAME'] = $name;
+		echo "<script>alert('Update successful!'); setTimeout(function(){ window.location.href = '../profile-adm.php'; }, );</script>";
     }
 } else {
-    echo "fail";
+    echo "Update failed!";
 }
 ?>
