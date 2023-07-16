@@ -7,7 +7,7 @@ $query = "SELECT PARKINGID, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATI
 $statement = $pdo->prepare($query);
 
 // Data from the database
-$stmt = $pdo->prepare("SELECT PARKINGID, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS LEFT JOIN RESERVATIONS USING(PARKINGID)");
+$stmt = $pdo->prepare("SELECT PARKINGID, TO_CHAR(RESERVATION_DATE, 'YYYY-MM-DD') AS RESERVATION_DATE FROM PARKING_LOTS JOIN RESERVATIONS USING(PARKINGID)");
 $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 foreach($rows as $row) 
@@ -68,7 +68,7 @@ echo '</div>';
         <div class="row">
           <div class="col-md-6">Cart Details</div>
           <div class="col-md-6" align="right">
-            <button type="button" name="clear_cart" id="clear_cart" class="btn btn-warning btn-xs">Clear</button>
+            <button type="button">Clear</button>
           </div>
         </div>
       </div>
