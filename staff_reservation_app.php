@@ -113,41 +113,57 @@
 </header>
 <!--End topbar header-->
 
-<!-- Edit Modal -->
-<div id="editModal" class="modal fade" role="dialog">
+<!-- Approve Modal -->
+<div id="appModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" style="position: absolute; will-change: transform; top: 0px; right: 0px; transform: translate3d(-20px, 20px, 0px);">&times;</button>
-        <h5 class="modal-title">Edit Staff Info</h5>
+        <h5 class="modal-title">Approve</h5>
       </div>
       <div class="modal-body">
         <!-- Form -->
         <div class="card-body">
-          <form id="editForm" enctype="multipart/form-data">
+          <form id="appForm" enctype="multipart/form-data">
             <div class="form-group">
               <?php
-                $stmt = $pdo->prepare("SELECT STAFFID FROM STAFFS");
+                $stmt = $pdo->prepare("SELECT RESERVATIONID FROM RESERVATIONS WHERE FLAG IS NULL OR FLAG = 0");
                 $stmt->execute();
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
               ?>
-              <label for="id">ID</label>
-              <select name="id" id="edit_id" class="form-control form-control-rounded">
-                <option value="" selected disabled hidden>Choose Staff ID</option>
+              <label for="id">Reservation</label>
+              <select name="id" id="app_id" class="form-control form-control-rounded">
+                <option value="" selected disabled hidden>Choose Reservation</option>
                 <?php 
                   foreach($rows as $row) {
-                    echo "<option value='" . $row['STAFFID'] . "'>" . $row['STAFFID'] . "</option>";
+                    echo "<option value='" . $row['RESERVATIONID'] . "'>" . $row['RESERVATIONID'] . "</option>";
                   }
                 ?>
               </select>
             </div>
-            <div class="form-group" id="edit_name">
-              <label for="name">Name</label>
-              <input type="text" class="form-control form-control-rounded" name="name" id="editName" placeholder="Enter Your Name">
+            <div class="form-group" id="app_name">
+              <label for="name">Customer</label>
+              <input type="text" class="form-control form-control-rounded" name="name" id="appName" placeholder="Name" disabled>
+            </div>
+						<div class="form-group" id="app_parking">
+              <label for="name">Parking Lot</label>
+              <input type="text" class="form-control form-control-rounded" name="parking" id="appParking" placeholder="Parking Lot" disabled>
+            </div>
+						<div class="form-group" id="app_date">
+              <label for="name">Reservation Date</label>
+              <input type="text" class="form-control form-control-rounded" name="date" id="appDate" placeholder="Reservation Date" disabled>
+            </div>
+						<div class="form-group" id="app_duration">
+              <label for="name">Duration</label>
+              <input type="text" class="form-control form-control-rounded" name="duration" id="appDuration" placeholder="Duration" disabled>
+            </div>
+						<div class="form-group" id="app_total">
+              <label for="name">Total</label>
+              <input type="text" class="form-control form-control-rounded" name="name" id="appTotal" placeholder="Total" disabled>
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-light btn-round px-5"><i class="fa fa-pencil"></i> Edit</button>
+              <button type="submit" class="btn btn-light btn-round px-5" style="background-color: #1ad622;"><i class="fa fa-check"></i> Approve</button>
             </div>
           </form>
         </div>
@@ -166,7 +182,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" style="position: absolute; will-change: transform; top: 0px; right: 0px; transform: translate3d(-20px, 20px, 0px);">&times;</button>
-        <h5 class="modal-title">Delete Staff</h5>
+        <h5 class="modal-title">Delete Reservation</h5>
       </div>
       <div class="modal-body">
         <!-- Form -->
@@ -174,23 +190,31 @@
         <form id="delForm" enctype="multipart/form-data">
             <div class="form-group">
               <?php
-                $stmt = $pdo->prepare("SELECT STAFFID FROM STAFFS");
+                $stmt = $pdo->prepare("SELECT RESERVATIONID FROM RESERVATIONS");
                 $stmt->execute();
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
               ?>
-              <label for="id">ID</label>
+              <label for="id">Reservation</label>
               <select name="id" id="del_id" class="form-control form-control-rounded">
-                <option value="" selected disabled hidden>Choose Staff ID</option>
+                <option value="" selected disabled hidden>Choose Reservation</option>
                 <?php 
                   foreach($rows as $row) {
-                    echo "<option value='" . $row['STAFFID'] . "'>" . $row['STAFFID'] . "</option>";
+                    echo "<option value='" . $row['RESERVATIONID'] . "'>" . $row['RESERVATIONID'] . "</option>";
                   }
                 ?>
               </select>
             </div>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" class="form-control form-control-rounded" name="name" id="delName" placeholder="Enter Your Name" disabled>
+            <div class="form-group" id="del_name">
+              <label for="name">Customer</label>
+              <input type="text" class="form-control form-control-rounded" name="name" id="delName" placeholder="Name" disabled>
+            </div>
+						<div class="form-group" id="del_parking">
+              <label for="name">Parking Lot</label>
+              <input type="text" class="form-control form-control-rounded" name="parking" id="delParking" placeholder="Parking Lot" disabled>
+            </div>
+						<div class="form-group" id="del_date">
+              <label for="name">Reservation Date</label>
+              <input type="text" class="form-control form-control-rounded" name="date" id="delDate" placeholder="Reservation Date" disabled>
             </div>
             <div class="form-group">
               <button type="submit" class="btn btn-light btn-round px-5" style="background-color: #801919;"><i class="fa fa-trash"></i> Delete</button>
@@ -211,31 +235,36 @@
       <div class="row">
         <div class="col-12 col-lg-12">
           <div class="card">
-            <div class="card-header">Staff List
+            <div class="card-header">Reservation Application
 							<div class="card-action">
 								<div class="dropdown">
 									<a href="javascript:void();" class="dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown" aria-expanded="false">
 			  						<i class="icon-options"></i>
 			 						</a>
 									<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(14px, 19px, 0px);">
-										<a class="dropdown-item" href="staff_register.php">Register New Staff</a>
-										<a type="button" class="dropdown-item" data-toggle="modal" data-target="#editModal">Edit Staff</a>
-										<a type="button" class="dropdown-item" data-toggle="modal" data-target="#delModal">Delete Staff</a>
+										<a type="button" class="dropdown-item" data-toggle="modal" data-target="#appModal">Approve</a>
+										<a type="button" class="dropdown-item" data-toggle="modal" data-target="#delModal">Delete</a>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div id="table" class="table-responsive">
 							<?php 
-								$stmt = $pdo->prepare("SELECT STAFFID, ROLE, NAME FROM STAFFS ORDER BY STAFFID");
+								$stmt = $pdo->prepare("SELECT RESERVATIONID, DURATION, TOTALCOST, FIRSTNAME || ' ' || LASTNAME AS CUSTNAME, NAME, PARKINGID, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, FLAG, STATUS_PAYMENT FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN STAFFS USING(STAFFID) ORDER BY RESERVATIONID");
                 $stmt->execute();
 							?>
 							<table id="editable_table" class="table table-hover align-items-center table-flush table-borderless" style="text-align: center;">
 								<thead>
 									<tr>
-										<th>Staff ID</th>
-										<th>Role</th>
-										<th>Name</th>
+										<th>No</th>
+										<th>Duration</th>
+										<th>Total</th>
+										<th>Customer Name</th>
+										<th>Staff Name</th>
+										<th>Parking Lot</th>
+										<th>Reservation Date</th>
+										<th>Approved</th>
+										<th>Payment Status</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -244,17 +273,29 @@
                     foreach($rows as $row) {
 									?>
 									<tr>
-										<td><?php echo $row["STAFFID"]; ?></td>
+                    <td><?php echo $row["RESERVATIONID"]; ?></td>
+                    <td><?php echo $row["DURATION"]; ?> days</td>
+                    <td>RM <?php echo $row["TOTALCOST"]; ?></td>
+                    <td><?php echo $row["CUSTNAME"]; ?></td>
+                    <td><?php echo $row["NAME"]; ?></td>
+                    <td><?php echo $row["PARKINGID"]; ?></td>
+                    <td><?php echo $row["RESERVEDATE"]; ?></td>
 										<?php 
-											if($row["ROLE"] == 1) {
-												echo "<td>Admin</td>";
+											if($row['FLAG'] == 1) {
+												echo "<td style='color: #1ad622;'>&#10004;</td>";
 											}
-											else if($row["ROLE"] == 2) {
-												echo "<td>Staff</td>";
+											else {
+												echo "<td style='color: #d90000'>&#10006;</td>";
+											}
+
+											if($row['STATUS_PAYMENT'] == 1) {
+												echo "<td style='color: #1ad622;'>PAID</td>";
+											}
+											else {
+												echo "<td style='color: #ecf545;'>PENDING</td>";
 											}
 										?>
-										<td><?php echo $row["NAME"]; ?></td>
-									</tr>
+                  </tr>
 									<?php 
                     }
 									?>
@@ -308,16 +349,15 @@
 <script>
   $(document).ready(function () {
 
-    // Edit Staff Data
-    $("#editForm").submit(function (event) {
-      var id = $("#edit_id").val();
-      var name = $("#editName").val();
+		// Approve Reservation Data
+    $("#appForm").submit(function (event) {
+      var id = $("#app_id").val();
       $.ajax({
         method: 'POST',
-        url: 'ajax/staff_edit_ajax.php',
-        data: {id:id, name:name},
+        url: 'ajax/reserve_app_ajax.php',
+        data: {id:id},
         success: function(data) {
-          alert("Data updated!");
+          alert("Reservation approved!");
         },
         error: function(data) {
           alert("Failed to update!");
@@ -325,19 +365,18 @@
       });
     });
 
-    //Delete Staff Data
+    //Delete Reservation Data
     $("#delForm").submit(function (event) {
       var id = $("#del_id").val();
       $.ajax({
         method: 'POST',
-        url: 'ajax/staff_delete_ajax.php',
+        url: 'ajax/reserve_del_ajax.php',
         data: {id:id},
         success: function(data) {
           alert("Data deleted!");
         },
         error: function(data) {
           alert("Failed to delete!");
-          console.log(data);
         }
       });
     });
@@ -347,14 +386,19 @@
 <!-- AJAX Form Trigger -->
 <script>
   $(document).ready(function() {
-    $('#edit_id').change(function() {
-      var staff_id = $(this).val();
+    $('#app_id').change(function() {
+      var reserve_id = $(this).val();
       $.ajax({
         method: 'POST',
+				dataType: 'json',
         url: 'ajax/dropdown_ajax.php',
-        data: {staff_id:staff_id},
+        data: {reserve_id:reserve_id},
         success: function(data) {
-          $("#editName").val(data);
+          $("#appName").val(data[0].NAME);
+					$("#appParking").val(data[0].SLOTNUM);
+					$("#appDate").val(data[0].RESERVEDATE);
+					$("#appDuration").val(data[0].DURATION);
+					$("#appTotal").val('RM ' + data[0].TOTALCOST);
         },
         error: function(data) {
           console.log("Error in parsing data!");
@@ -363,13 +407,16 @@
     });
 
     $('#del_id').change(function() {
-      var id = $(this).val();
+      var reserve_id = $(this).val();
       $.ajax({
         method: 'POST',
+				dataType: 'json',
         url: 'ajax/dropdown_ajax.php',
-        data: {id:id},
+        data: {reserve_id:reserve_id},
         success: function(data) {
-          $("#delName").val(data);
+          $("#delName").val(data[0].NAME);
+					$("#delParking").val(data[0].SLOTNUM);
+					$("#delDate").val(data[0].RESERVEDATE);
         },
         error: function(data) {
           console.log("Error in parsing data!");
