@@ -175,7 +175,7 @@
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
               ?>
               <label for="id">ID</label>
-              <select name="id" id="delId" class="form-control form-control-rounded">
+              <select name="id" id="del_id" class="form-control form-control-rounded">
                 <option value="" selected disabled hidden>Choose Staff ID</option>
                 <?php 
                   foreach($rows as $row) {
@@ -186,7 +186,7 @@
             </div>
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" class="form-control form-control-rounded" name="name" id="delName" placeholder="Enter Your Name">
+              <input type="text" class="form-control form-control-rounded" name="name" id="delName" placeholder="Enter Your Name" disabled>
             </div>
             <div class="form-group">
               <button type="submit" class="btn btn-light btn-round px-5" style="background-color: #801919;"><i class="fa fa-trash"></i> Delete</button>
@@ -221,7 +221,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="table-responsive">
+						<div id="table" class="table-responsive">
 							<?php 
 								$stmt = $pdo->prepare("SELECT STAFFID, ROLE, NAME FROM STAFFS ORDER BY STAFFID");
                 $stmt->execute();
@@ -303,23 +303,39 @@
 <!-- AJAX forms -->
 <script>
   $(document).ready(function () {
+
+    // Edit Staff Data
     $("#editForm").submit(function (event) {
-      var formData = {
-        name: $("#editId").val(),
-        email: $("#editName").val()
-      };
-
+      var id = $("#edit_id").val();
+      var name = $("#editName").val();
       $.ajax({
-        type: "POST",
-        url: "staff_edit.w.php",
-        data: formData,
-        dataType: "json",
-        encode: true,
-      }).done(function (data) {
-        console.log(data);
+        method: 'POST',
+        url: 'ajax/staff_edit_ajax.php',
+        data: {id:id, name:name},
+        success: function(data) {
+          alert("Data updated!");
+        },
+        error: function(data) {
+          alert("Failed to update!");
+        }
       });
+    });
 
-      event.preventDefault();
+    //Delete Staff Data
+    $("#delForm").submit(function (event) {
+      var id = $("#del_id").val();
+      $.ajax({
+        method: 'POST',
+        url: 'ajax/staff_delete_ajax.php',
+        data: {id:id},
+        success: function(data) {
+          alert("Data deleted!");
+        },
+        error: function(data) {
+          alert("Failed to delete!");
+          console.log(data);
+        }
+      });
     });
   });
 </script>
@@ -331,10 +347,25 @@
       var id = $(this).val();
       $.ajax({
         method: 'POST',
-        url: 'ajax/staff_edit_ajax.php',
-        data: 'id=' + id,
+        url: 'ajax/dropdown_ajax.php',
+        data: {id:id},
         success: function(data) {
           $("#editName").val(data);
+        },
+        error: function(data) {
+          console.log("Error in parsing data!");
+        }
+      })
+    });
+
+    $('#del_id').change(function() {
+      var id = $(this).val();
+      $.ajax({
+        method: 'POST',
+        url: 'ajax/dropdown_ajax.php',
+        data: {id:id},
+        success: function(data) {
+          $("#delName").val(data);
         },
         error: function(data) {
           console.log("Error in parsing data!");
@@ -349,6 +380,7 @@
   $(document).ready(function() {
     $('[data-dismiss=modal]').on('click', function () {
       $('#editForm').trigger('reset');
+      $('#delForm').trigger('reset');
     });
   });
 </script>

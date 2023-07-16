@@ -1,11 +1,12 @@
-<?php 
-	include '../config.php';
+<?php
+	include("../config.php");
 
-	if(isset($_POST['id'])) {
-		//Fetch data based on staff id
-		$stmt = $pdo->prepare("SELECT NAME FROM STAFFS WHERE STAFFID = ".$_POST['id']." ORDER BY STAFFID");
+	if(isset($_POST['id']) && isset($_POST['name'])) {
+		$id = $_POST['id'];
+		$name = $_POST['name'];
+
+		// Update table STAFF
+		$stmt = $pdo->prepare("UPDATE STAFFS SET NAME ='" . $name . "' WHERE STAFFID =" . $id . "");
 		$stmt->execute();
-		$result = $stmt->fetch(PDO::FETCH_COLUMN);
-		echo $result;
 	}
 ?>
