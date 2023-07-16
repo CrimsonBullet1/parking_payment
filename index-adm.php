@@ -1,11 +1,12 @@
 <?php
   include ("config.php");
-  //  session_start();
+   session_start();
+  //  print_r($_SESSION);
 
-  //  if (!isset($_SESSION['user'])) {
-  //   header("Location: login.php");
-  //   exit();
-  //  }
+  if (!isset($_SESSION['staffid'])) {
+    header("Location: login.php");
+ exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,7 +99,7 @@
           </li>
           <li class="dropdown-divider"></li>
           <li class="dropdown-item">
-            <a href="profile.php">
+            <a href="profile-adm.php">
               <i class="fa fa-user"></i> Profile
             </a>
           </li>
