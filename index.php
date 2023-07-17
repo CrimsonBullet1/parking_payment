@@ -158,7 +158,7 @@
                   <?php if (empty($row['PARKINGID'])) : ?>
                   <tr>
                     <td colspan="4">You have not make any reservation parking.</td>
-                    <td colspan="1"><button type="submit" class="btn btn-light btn-round px-5" style="background-color: #1ad622;" onclick="window.location.href = 'reservation.php';"><i class="fa fa-check"></i> Make A Reservation</button></td>
+                    <td colspan="1"><button type="submit" class="btn btn-light btn-round px-5" style="background-color: #1ad622;" onclick="window.location.href = 'parking_lot.php';"><i class="fa fa-check"></i> Make A Reservation</button></td>
                   </tr>
                   <?php endif; ?>
                 </tbody>
