@@ -1,5 +1,5 @@
 <?php
-   session_start();
+   include('config.php');
 
    if (!isset($_SESSION['customerid'])) {
     header("Location: login.php");
@@ -185,10 +185,12 @@
                   <div class="form-group row">
                     <input class="form-control" name="id" type="text" value="<?php echo $_SESSION['customerid']; ?>" hidden>
                     <?php 
-                      $vehicleId = "";
-                      if($vehicleId != null) {
+                      $stmt = $pdo->prepare("SELECT VEHICLEID FROM VEHICLES WHERE CUSTOMERID=" . $_SESSION['customerid'] . "");
+                      $stmt->execute();
+                      $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+                      if($result[0] != null) {
                     ?>
-                      <input class="form-control" name="vehicleId" name="vehicleId" type="text" value="<?php echo $vehicleId ?>" hidden>
+                      <input class="form-control" name="vehicleId" id="vehicleId" type="text" value="<?php echo $result[0] ?>" hidden>
                     <?php
                       }
                     ?>
@@ -277,11 +279,9 @@
           url: 'ajax/edit_vehicle_ajax.php',
           data: {id:id,vehicleid:vehicleid,vehicletype:vehicletype,vehiclenum:vehiclenum},
           success: function(data) {
-            console.log(data);
             alert("Vehicle data updated!");
           },
           error: function(data) {
-            console.log(data);
             alert("Failed to update!");
           }
         });
