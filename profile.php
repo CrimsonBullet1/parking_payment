@@ -59,7 +59,7 @@
       </li>
 
       <li>
-        <a href="parking.php">
+        <a href="parking_lot.php">
           <i class="zmdi zmdi-format-list-bulleted"></i> <span>Reservations</span>
         </a>
       </li>

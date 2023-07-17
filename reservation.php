@@ -224,11 +224,9 @@ include('config.php');
 
                   <!-- Submit Button -->
                   <div class="form-group">
-                      <a href="checkout.php"><button type="submit" class="btn btn-light px-5">ADD TO CART</button></a>
+                      <a href="checkout.php"><button type="submit" name="submit" class="btn btn-light px-5">ADD TO CART</button></a>
                   </div>
-              </form>
               </div>
-
 
               <div class="form-group">                         
                 <?php 
@@ -242,8 +240,6 @@ include('config.php');
                 $stmt->bindParam(':duration', $_SESSION['duration']);
                 $stmt->execute();?>
               </div>
-
-                <!-- <input type="hidden" name="lot" value="<?php echo $slotnum; ?>"> -->
                 <?php 
                   $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   foreach ($rows as $row)            
@@ -252,9 +248,10 @@ include('config.php');
                 <td>
                 <!-- Form Totalcost Calculate Duration -->
                 <?php               
-                $duration = $row['DURATION'];
-                $totalcost = $duration * 50;
+                // $duration = $row['DURATION'];
+                // $totalcost = $duration * 50;
                 ?>
+              </form>
                 </div>
               </div>
             </div>
