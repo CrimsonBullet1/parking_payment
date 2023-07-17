@@ -291,10 +291,14 @@ function paymentfunc() {
 }
 </script>
 
+
 <style>
-
-
-
+  .panel-default{
+    background-color: #b8b8b8
+  }
+  .card {
+    background-color: #A93226; 
+  }
 </style>
 </body>
 </html>
