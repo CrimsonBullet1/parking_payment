@@ -36,6 +36,7 @@
   <!-- loader-->
   <link href="assets/css/pace.min.css" rel="stylesheet"/>
   <script src="assets/js/pace.min.js"></script>
+  <script text="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
   <!--favicon-->
   <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
   <!-- Vector CSS -->
@@ -159,13 +160,7 @@
                 </div>
                 <div class="table-responsive">
                     <?php
-                      $stmt = $pdo->prepare("SELECT FIRSTNAME || ' ' || LASTNAME AS CUSTOMER_NAME,RESERVATIONID, SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS_PAYMENT, PARKINGID 
-                      FROM RESERVATIONS 
-                      JOIN CUSTOMERS USING(CUSTOMERID)
-                      JOIN PARKING_LOTS USING(PARKINGID)
-                      WHERE CUSTOMERID = :customerid 
-                      ORDER BY RESERVATIONID ASC");
-                        $stmt->bindValue(':customerid', $_SESSION['customerid']);
+                      $stmt = $pdo->prepare("SELECT FIRSTNAME || ' ' || LASTNAME AS CUSTOMER_NAME,RESERVATIONID, SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS_PAYMENT, PARKINGID FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN PARKING_LOTS USING(PARKINGID) WHERE CUSTOMERID = " . $_SESSION['customerid'] . " ORDER BY RESERVATIONID ASC");
                         $stmt->execute();
                         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         ?>
@@ -280,7 +275,7 @@
   $(document).ready(function() {
     function clearcart()
   {
-    <a href="logout.php"> <a/>
+    <?php echo "Clear button success"; ?>
   }
   });
   
@@ -290,15 +285,8 @@
 
 <script>
 function paymentfunc() {
-  alert("PAYMENT SUCCESSFUL");
-  $stmt = $pdo->prepare("UPDATE RESERVATIONS
-  SET STATUS_PAYMENT = '1', FLAG = '1'
-  WHERE STATUS_PAYMENT = '0' OR STATUS_PAYMENT IS NULL;
-  UPDATE RESERVATIONS
-  SET STATUS_PAYMENT = '1', FLAG = '1'
-  WHERE FLAG = '0' OR FLAG IS NULL;");
+  $stmt = $pdo->prepare("UPDATE RESERVATIONS SET STATUS_PAYMENT = 1, FLAG = 1 WHERE ");
   $stmt->execute();
-  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
   alert("PAYMENT SUCCESSFUL!")
 }
 </script>
