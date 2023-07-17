@@ -139,103 +139,114 @@
   <div class="content-wrapper">
     <div class="container-fluid">
 
-      <!--Start Dashboard Content-->
+  <!--Start Dashboard Content-->
   <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-6">Cart Details</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="container-fluid">
         <div class="row">
-          <div class="col-md-6">Reservation Details</div>
-          <div class="col-md-6" align="right">
-            <button type="button" class="btn btn-warning btn-xs" button onclick="clearcart()">Clear</button>
+          <div class="col-12 col-lg-12">
+            <div class="card">
+              <div class="card-header">Confirmation
+                <div class="card-action"></div>
+              </div>
+              <div class="table-responsive">
+                <?php
+                  $stmt = $pdo->prepare("SELECT FIRSTNAME || ' ' || LASTNAME AS CUSTOMER_NAME,RESERVATIONID, SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, FLAG, STATUS_PAYMENT, PARKINGID FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN PARKING_LOTS USING(PARKINGID) WHERE CUSTOMERID = " . $_SESSION['customerid'] . " ORDER BY RESERVATIONID ASC");
+                  $stmt->execute();
+                  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+
+                <table class="table align-items-center table-flush table-borderless" style="text-align: center;">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center;">Reservation ID</th>
+                      <th style="text-align: center;">Customer name</th>
+                      <th style="text-align: center;">Parking Slot No</th>
+                      <th style="text-align: center;">Date Reservations</th>
+                      <th style="text-align: center;">Duration</th>
+                      <th style="text-align: center;">Total</th>
+                      <th style="text-align: center;">Approval</th>
+                      <th style="text-align: center;">Status</th>
+                      <th style="text-align: center;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php 
+                      foreach ($rows as $row) {
+                    ?>
+                    <tr>
+                      <td><?php echo $row['RESERVATIONID']; ?></td>
+                      <td><?php echo $row['CUSTOMER_NAME']; ?></td>
+                      <td><?php echo $row['SLOTNUM']; ?></td>
+                      <td><?php echo $row['RESERVEDATE']; ?></td>
+                      <td><?php echo $row['DURATION']; ?> DAYS</td>
+                      <td>RM <?php echo $row['TOTALCOST']; ?></td>
+                      <?php
+                        if($row['FLAG'] == 1)
+                        {
+                          echo "<td>APPROVED</td>";
+                        } 
+                        elseif($row['FLAG'] == 0 || ($row['FLAG'] == null))  
+                        {
+                          echo "<td>WAITING FOR APPROVAL</td>";
+                        } 
+
+                        if($row['STATUS_PAYMENT'] == 1)
+                        {
+                          echo "<td>PAID</td>";
+                        } 
+                        elseif($row['STATUS_PAYMENT'] == 0 || ($row['STATUS_PAYMENT'] == null))  
+                        {
+                          if($row['FLAG'] == 1)
+                          {
+                            echo "<td>PENDING</td>";
+                            echo "<td>
+                            <div class='col-md-6' align='right'>
+                              <button type='submit' name='pay' id='pay' class='btn btn-success btn-xs' value='" . $row['RESERVATIONID'] . "'>PAY</button>
+                            </div>
+                          </td>";
+                          } 
+                          elseif($row['FLAG'] == 0 || ($row['FLAG'] == null))  
+                          {
+                            echo "<td> - </td>";
+                            echo "<td> - </td>";
+                          } 
+                        } 
+                      ?>
+                    </tr>
+
+                    <?php 
+                      }
+                      
+                      if(empty($row["RESERVATIONID"])) {
+                        echo "
+                          <tr>
+                            <td colspan='7'>Your cart is empty</td>
+                          </tr>
+                        ";
+                      }
+                    ?> 
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="panel-body">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-12 col-lg-12">
-              <div class="card">
-                <div class="card-header">Confirmation
-                  <div class="card-action">
-                  </div>
-                </div>
-                <div class="table-responsive">
-                    <?php
-                      $stmt = $pdo->prepare("SELECT FIRSTNAME || ' ' || LASTNAME AS CUSTOMER_NAME,RESERVATIONID, SLOTNUM, DURATION, TOTALCOST, TO_CHAR(RESERVATION_DATE, 'DD Mon YYYY') AS RESERVEDATE, STATUS_PAYMENT, PARKINGID FROM RESERVATIONS JOIN CUSTOMERS USING(CUSTOMERID) JOIN PARKING_LOTS USING(PARKINGID) WHERE CUSTOMERID = " . $_SESSION['customerid'] . " ORDER BY RESERVATIONID ASC");
-                        $stmt->execute();
-                        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        ?>
-
-                        <table class="table align-items-center table-flush table-borderless">
-                        <thead>
-                          <tr>
-                            <th>Reservation ID</th>
-                            <th>Customer name</th>
-                            <th>Parking Slot No</th>
-                            <th>Date Reservations</th>
-                            <th>Duration</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                          </tr>
-                        </thead>
-                          <tbody>
-                            <?php foreach ($rows as $row) : ?>
-                            <?php if ($row['PARKINGID'] !== null) : ?>
-                          
-                            <tr>
-                              <td><?php echo $row['RESERVATIONID'] ?></td>
-                              <td><?php echo $row['CUSTOMER_NAME'] ?></td>
-                              <td><?php echo $row['SLOTNUM'] ?></td>
-                              <td><?php echo $row['RESERVEDATE'] ?></td>
-                              <td><?php echo $row['DURATION'] ?> DAYS</td>
-                              <td>RM <?php echo $row['TOTALCOST'] ?></td>
-                              <?php
-                                if($row['STATUS_PAYMENT'] == 1)
-                                {
-                                  ECHO"<td>PAID</td>";
-                                } 
-                                elseif($row['STATUS_PAYMENT'] == 0 OR ($row['STATUS_PAYMENT'] == NULL))  
-                                {
-                                  ECHO"<td>PENDING</td>";
-                                } 
-                              ?>
-                            </tr>
-
-                            <?php endif; ?>
-                            <?php endforeach; ?>
-
-                            <?php if (empty($row['PARKINGID'])) : ?>
-                            <tr>
-                              <td colspan="4">You have not make any reservation parking.</td>
-                              <td colspan="1"><button type="submit" class="btn btn-light btn-round px-5" style="background-color: #1ad622;" onclick="window.location.href = 'reservation.php';"><i class="fa fa-check"></i> Make A Reservation</button></td>
-                            </tr>
-                            <?php endif; ?>
-                          </tbody>
-                          </table>
-                        </div>
-                       </div>
-                       </div>
-                     </div>
-                  </div>
-                 </div>
-
-   <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="col-md-6" align="right">
-            <button type="button" button onclick="paymentfunc()" class="btn btn-success btn-xs">GO TO PAYMENT</button>
-          </div>
-        </div>
-    </div> 
-           
-
-	  
-      <!--start overlay-->
-        <div class="overlay toggle-menu"></div>
-      <!--end overlay-->
     </div>
-    <!-- End container-fluid-->
+
+    <!--start overlay-->
+    <div class="overlay toggle-menu"></div>
+    <!--end overlay-->
   </div>
-  <!--End content-wrapper-->
+  <!-- End container-fluid-->
+</div>
+<!--End content-wrapper-->
 
   <!--Start Back To Top Button-->
     <a href="javaScript:void();" class="back-to-top"><i class="fa fa-angle-double-up"></i> </a>
@@ -270,31 +281,51 @@
 <script src="assets/js/app-script.js"></script>
 <!-- Chart js -->
 <script src="assets/plugins/Chart.js/Chart.min.js"></script>
-<!--clear cart js -->
-<script>
-  $(document).ready(function() {
-    function clearcart()
-  {
-    <?php echo "Clear button success"; ?>
-  }
-  });
-  
-</script>
-
-
 
 <script>
 function paymentfunc() {
-  $stmt = $pdo->prepare("UPDATE RESERVATIONS SET STATUS_PAYMENT = 1, FLAG = 1 WHERE ");
-  $stmt->execute();
+  <?php
+    $stmt = $pdo->prepare("SELECT FLAG FROM RESERVATIONS WHERE RESERVATIONID=" . $_SESSION['customerid'] . "");
+    $stmt->execute();
+    $flag = $stmt->fetch();
+
+    $stmt = $pdo->prepare("UPDATE RESERVATIONS SET STATUS_PAYMENT = 1 WHERE CUSTOMERID=" . $_SESSION['customerid'] . " AND FLAG=" . $flag . "");
+    $stmt->execute();
+  ?>
   alert("PAYMENT SUCCESSFUL!")
 }
 </script>
 
+<!-- Ajax call -->
+<script>
+  $(document).ready(function () {
+
+    // Pay Button Get Data
+    $("#pay").submit(function (event) {
+      var id = $(this).val();
+      console.log(id);
+      // $.ajax({
+      //   method: 'POST',
+      //   url: 'ajax/staff_edit_ajax.php',
+      //   data: {id:id, name:name},
+      //   success: function(data) {
+      //     alert("Data updated!");
+      //   },
+      //   error: function(data) {
+      //     alert("Failed to update!");
+      //   }
+      // });
+    });
+  });
+</script>
+
 <style>
-
-
-
+  .panel-default{
+    background-color: #b8b8b8
+  }
+  .card {
+    background-color: #A93226; 
+  }
 </style>
 </body>
 </html>
