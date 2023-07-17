@@ -144,7 +144,7 @@
         <div class="row">
           <div class="col-md-6">Reservation Details</div>
           <div class="col-md-6" align="right">
-            <button type="button" name="clear_cart" id="clear_cart" class="btn btn-warning btn-xs">Clear</button>
+            <button type="button" class="btn btn-warning btn-xs" button onclick="clearcart()">Clear</button>
           </div>
         </div>
       </div>
@@ -196,7 +196,7 @@
                               <?php
                                 if($row['STATUS_PAYMENT'] == 1)
                                 {
-                                  ECHO"<td>SUCCESS</td>";
+                                  ECHO"<td>PAID</td>";
                                 } 
                                 elseif($row['STATUS_PAYMENT'] == 0 OR ($row['STATUS_PAYMENT'] == NULL))  
                                 {
@@ -227,10 +227,9 @@
       <div class="panel-heading">
         <div class="row">
           <div class="col-md-6" align="right">
-            <button type="button" name="add_to_cart" id="add_to_cart" class="btn btn-success btn-xs">GO TO PAYMENT</button>
+            <button type="button" button onclick="paymentfunc()" class="btn btn-success btn-xs">GO TO PAYMENT</button>
           </div>
         </div>
-
     </div> 
            
 
@@ -276,6 +275,30 @@
 <script src="assets/js/app-script.js"></script>
 <!-- Chart js -->
 <script src="assets/plugins/Chart.js/Chart.min.js"></script>
+<!--clear cart js -->
+<script>
+  $(document).ready(function() {
+    function clearcart()
+  {
+    <a href="logout.php"> <a/>
+  }
+  });
+  
+</script>
+
+
+
+<script>
+function paymentfunc() {
+  alert("PAYMENT SUCCESSFUL");
+}
+</script>
+
+<style>
+
+
+
+</style>
 </body>
 </html>
 
