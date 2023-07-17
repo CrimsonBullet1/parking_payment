@@ -291,6 +291,15 @@
 <script>
 function paymentfunc() {
   alert("PAYMENT SUCCESSFUL");
+  $stmt = $pdo->prepare("UPDATE RESERVATIONS
+  SET STATUS_PAYMENT = '1', FLAG = '1'
+  WHERE STATUS_PAYMENT = '0' OR STATUS_PAYMENT IS NULL;
+  UPDATE RESERVATIONS
+  SET STATUS_PAYMENT = '1', FLAG = '1'
+  WHERE FLAG = '0' OR FLAG IS NULL;");
+  $stmt->execute();
+  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  alert("PAYMENT SUCCESSFUL!")
 }
 </script>
 
